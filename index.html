@@ -1,2261 +1,3504 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Elora</title>
-  <meta name="description" content="Elora">
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
-
-  <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0
-    }
-
-    :root{
-      --pink:#d92d82;
-      --pink-dark:#a91d60;
-      --pink-light:#fff0f7;
-      --purple:#70459f;
-      --purple-dark:#55327c;
-      --purple-light:#f2e8fa;
-      --text:#27232a;
-      --muted:#77717a;
-      --white:#fff;
-      --bg:#fff9fc;
-      --border:#f0dce7;
-      --success:#1c9b62;
-      --danger:#d64545;
-    }
-
-    body{
-      font-family:Arial,Tahoma,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      overflow-x:hidden;
-    }
-
-    body.prime-active{
-      --pink:#70459f;
-      --pink-dark:#55327c;
-      --pink-light:#f2e8fa;
-      --border:#e4d5ef;
-    }
-
-    button,input,select{
-      font-family:inherit
-    }
-
-    button{
-      cursor:pointer
-    }
-
-    a{
-      text-decoration:none;
-      color:inherit
-    }
-
-    img{
-      max-width:100%
-    }
-
-    /* =========================
-       TOP BAR
-    ========================= */
-
-    .top-bar{
-      background:linear-gradient(
-        90deg,
-        var(--pink-dark),
-        var(--pink),
-        #ef69aa
-      );
-      color:#fff;
-      text-align:center;
-      padding:11px 15px;
-      font-size:14px;
-      font-weight:bold;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    header{
-      background:#fff;
-      position:sticky;
-      top:0;
-      z-index:1000;
-      border-bottom:1px solid var(--border);
-      box-shadow:0 3px 15px rgba(80,20,50,.06);
-    }
-
-    .header-inner{
-      max-width:1450px;
-      margin:auto;
-      min-height:82px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 25px;
-      gap:20px;
-    }
-
-    .logo{
-      font-family:Georgia,serif;
-      color:var(--pink-dark);
-      font-size:34px;
-      font-weight:bold;
-      letter-spacing:1px;
-      text-align:center;
-    }
-
-    .logo small{
-      display:block;
-      font-family:Arial,sans-serif;
-      font-size:8px;
-      letter-spacing:3px;
-      color:#777;
-      margin-top:-4px;
-    }
-
-    .header-actions{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .icon-btn{
-      width:45px;
-      height:45px;
-      border:1px solid var(--border);
-      background:#fff;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      font-size:20px;
-      color:var(--pink-dark);
-      position:relative;
-    }
-
-    .cart-count{
-      position:absolute;
-      top:-4px;
-      left:-3px;
-      background:var(--pink);
-      color:#fff;
-      width:20px;
-      height:20px;
-      border-radius:50%;
-      font-size:11px;
-      display:grid;
-      place-items:center;
-    }
-
-    .menu-btn{
-      border:0;
-      background:none;
-      font-size:30px;
-      color:var(--pink-dark);
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-
-    .hero{
-      max-width:1450px;
-      margin:20px auto 0;
-      padding:0 18px;
-    }
-
-    .hero-slider{
-      height:480px;
-      position:relative;
-      overflow:hidden;
-      border-radius:28px;
-      box-shadow:0 10px 35px rgba(100,20,60,.14);
-    }
-
-    .slide{
-      position:absolute;
-      inset:0;
-      opacity:0;
-      transition:opacity .7s ease;
-      display:flex;
-      align-items:center;
-      padding:70px;
-      background-size:cover;
-      background-position:center;
-    }
-
-    .slide.active{
-      opacity:1
-    }
-
-    .slide:nth-child(1){
-      background:
-      linear-gradient(
-        90deg,
-        rgba(255,240,248,.98),
-        rgba(255,240,248,.50)
-      ),
-      url("https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1800&q=90");
-    }
-
-    .slide:nth-child(2){
-      background:
-      linear-gradient(
-        90deg,
-        rgba(247,229,241,.98),
-        rgba(247,229,241,.50)
-      ),
-      url("https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?auto=format&fit=crop&w=1800&q=90");
-    }
-
-    .slide:nth-child(3){
-      background:
-      linear-gradient(
-        90deg,
-        rgba(239,226,248,.98),
-        rgba(239,226,248,.50)
-      ),
-      url("https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1800&q=90");
-    }
-
-    .slide-content{
-      max-width:620px
-    }
-
-    .slide-content span{
-      color:var(--pink-dark);
-      font-weight:bold;
-      font-size:18px;
-    }
-
-    .slide-content h1{
-      font-size:58px;
-      margin:14px 0;
-      color:#521d3b;
-      line-height:1.2;
-    }
-
-    .slide-content p{
-      font-size:21px;
-      line-height:1.9;
-      margin-bottom:25px;
-    }
-
-    .main-btn{
-      border:0;
-      background:linear-gradient(
-        135deg,
-        var(--pink-dark),
-        var(--pink)
-      );
-      color:#fff;
-      padding:15px 32px;
-      border-radius:30px;
-      font-size:17px;
-      font-weight:bold;
-      box-shadow:0 7px 20px rgba(217,45,130,.25);
-    }
-
-    .slider-arrow{
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      width:48px;
-      height:48px;
-      border:0;
-      border-radius:50%;
-      background:rgba(255,255,255,.92);
-      color:var(--pink-dark);
-      font-size:27px;
-      z-index:5;
-    }
-
-    .arrow-right{
-      right:18px
-    }
-
-    .arrow-left{
-      left:18px
-    }
-
-    .dots{
-      position:absolute;
-      bottom:18px;
-      left:50%;
-      transform:translateX(-50%);
-      display:flex;
-      gap:8px;
-      z-index:10;
-    }
-
-    .dot{
-      width:10px;
-      height:10px;
-      background:#fff;
-      border-radius:50%;
-      opacity:.7;
-      cursor:pointer;
-    }
-
-    .dot.active{
-      background:var(--pink);
-      width:26px;
-      border-radius:20px;
-      opacity:1;
-    }
-
-    /* =========================
-       SECTIONS
-    ========================= */
-
-    .section{
-      max-width:1450px;
-      margin:58px auto;
-      padding:0 18px;
-    }
-
-    .section-title{
-      display:flex;
-      justify-content:space-between;
-      align-items:end;
-      margin-bottom:25px;
-    }
-
-    .section-title h2{
-      font-size:32px;
-      color:#3f2634;
-    }
-
-    .section-title h2::after{
-      content:"";
-      display:block;
-      width:75px;
-      height:4px;
-      border-radius:5px;
-      background:linear-gradient(
-        90deg,
-        var(--pink),
-        #f2a4c9
-      );
-      margin-top:10px;
-    }
-
-    .see-all{
-      color:var(--pink-dark);
-      font-weight:bold;
-    }
-
-    /* =========================
-       CATEGORIES
-    ========================= */
-
-    .categories-wrapper{
-      overflow:hidden
-    }
-
-    .categories{
-      display:flex;
-      gap:20px;
-      overflow-x:auto;
-      padding:10px 4px 22px;
-      scrollbar-width:none;
-    }
-
-    .categories::-webkit-scrollbar{
-      display:none
-    }
-
-    .category{
-      flex:0 0 175px;
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:28px;
-      padding:13px;
-      text-align:center;
-      box-shadow:0 6px 18px rgba(90,20,50,.07);
-      transition:.3s;
-      cursor:pointer;
-    }
-
-    .category:hover{
-      transform:translateY(-6px);
-      box-shadow:0 12px 28px rgba(90,20,50,.13);
-    }
-
-    .category img{
-      width:145px;
-      height:145px;
-      border-radius:23px;
-      object-fit:cover;
-      margin-bottom:12px;
-    }
-
-    .category strong{
-      font-size:17px;
-      display:block;
-      padding-bottom:5px;
-    }
-
-    /* =========================
-       PRODUCTS
-    ========================= */
-
-    .products{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:25px;
-    }
-
-    .product{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:23px;
-      overflow:hidden;
-      position:relative;
-      transition:.3s;
-    }
-
-    .product:hover{
-      transform:translateY(-6px);
-      box-shadow:0 16px 32px rgba(80,20,50,.12);
-    }
-
-    .product-image{
-      position:relative;
-      height:310px;
-      overflow:hidden;
-      background:#faf4f7;
-    }
-
-    .product-image img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      transition:.4s;
-    }
-
-    .product:hover .product-image img{
-      transform:scale(1.05)
-    }
-
-    .discount{
-      position:absolute;
-      top:13px;
-      right:13px;
-      background:var(--pink);
-      color:#fff;
-      border-radius:20px;
-      padding:7px 11px;
-      font-size:13px;
-      font-weight:bold;
-      z-index:2;
-    }
-
-    .prime-badge{
-      position:absolute;
-      top:51px;
-      right:13px;
-      background:linear-gradient(
-        135deg,
-        #6f429f,
-        #9b6ac7
-      );
-      color:#fff;
-      border-radius:20px;
-      padding:7px 11px;
-      font-size:12px;
-      font-weight:bold;
-      z-index:2;
-    }
-
-    .favorite{
-      position:absolute;
-      top:12px;
-      left:12px;
-      width:40px;
-      height:40px;
-      border-radius:50%;
-      border:0;
-      background:rgba(255,255,255,.93);
-      color:var(--pink);
-      font-size:21px;
-      z-index:2;
-    }
-
-    .product-info{
-      padding:17px
-    }
-
-    .product-info h3{
-      font-size:17px;
-      margin-bottom:11px;
-      min-height:42px;
-    }
-
-    .price-row{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .price{
-      font-size:21px;
-      font-weight:bold;
-      color:var(--pink-dark);
-    }
-
-    .old-price{
-      color:#aaa;
-      text-decoration:line-through;
-      font-size:14px;
-    }
-
-    .prime-price{
-      margin-top:9px;
-      color:#70459f;
-      font-weight:bold;
-      font-size:14px;
-    }
-
-    .add-cart{
-      width:100%;
-      margin-top:14px;
-      padding:12px;
-      border:0;
-      border-radius:13px;
-      background:var(--pink-light);
-      color:var(--pink-dark);
-      font-weight:bold;
-      font-size:15px;
-    }
-
-    .empty-products{
-      grid-column:1/-1;
-      background:#fff;
-      border:1px dashed var(--border);
-      border-radius:20px;
-      padding:50px 20px;
-      text-align:center;
-      color:var(--muted);
-    }
-
-    /* =========================
-       PRIME
-    ========================= */
-
-    .prime-box{
-      max-width:1450px;
-      margin:70px auto;
-      padding:0 18px;
-    }
-
-    .prime-inner{
-      border-radius:30px;
-      padding:50px;
-      background:
-      linear-gradient(
-        135deg,
-        #eee2f8,
-        #d9c3ed,
-        #f4eafa
-      );
-      border:1px solid #d4bce8;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:40px;
-    }
-
-    .prime-inner h2{
-      color:#684093;
-      font-size:38px;
-      margin-bottom:14px;
-    }
-
-    .prime-inner p{
-      line-height:2;
-      color:#493751;
-    }
-
-    .prime-list{
-      margin-top:14px;
-      line-height:2.1;
-      font-size:16px;
-    }
-
-    .prime-price-box{
-      text-align:center;
-      min-width:230px;
-    }
-
-    .prime-price-box strong{
-      display:block;
-      color:#63378d;
-      font-size:42px;
-    }
-
-    .prime-price-box span{
-      color:#666
-    }
-
-    .prime-btn{
-      margin-top:16px;
-      background:linear-gradient(
-        135deg,
-        #63378d,
-        #9465bf
-      );
-      color:#fff;
-      border:0;
-      border-radius:25px;
-      padding:14px 30px;
-      font-weight:bold;
-      font-size:16px;
-    }
-
-    /* =========================
-       FEATURES
-    ========================= */
-
-    .features{
-      max-width:1450px;
-      margin:60px auto;
-      padding:0 18px;
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:18px;
-    }
-
-    .feature{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:21px;
-      padding:25px 15px;
-      text-align:center;
-    }
-
-    .feature-icon{
-      font-size:32px;
-      margin-bottom:11px
-    }
-
-    .feature h3{
-      font-size:16px;
-      margin-bottom:7px
-    }
-
-    .feature p{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.8;
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer{
-      background:#351d2b;
-      color:#fff;
-      margin-top:80px;
-      padding:55px 20px 25px;
-    }
-
-    .footer-inner{
-      max-width:1450px;
-      margin:auto;
-      display:grid;
-      grid-template-columns:1.5fr 1fr 1fr;
-      gap:45px;
-    }
-
-    footer h2{
-      color:#f49ac3;
-      margin-bottom:15px
-    }
-
-    footer p{
-      color:#dbcbd3;
-      line-height:2
-    }
-
-    .socials{
-      display:flex;
-      gap:12px;
-      margin-top:20px
-    }
-
-    .social{
-      width:48px;
-      height:48px;
-      border-radius:50%;
-      background:#fff;
-      color:#6f2d50;
-      display:grid;
-      place-items:center;
-      font-weight:bold;
-      font-size:20px;
-    }
-
-    .footer-bottom{
-      max-width:1450px;
-      margin:38px auto 0;
-      padding-top:20px;
-      border-top:1px solid rgba(255,255,255,.15);
-      text-align:center;
-      color:#c9b7c0;
-      font-size:13px;
-    }
-
-    /* =========================
-       TOAST
-    ========================= */
-
-    .toast{
-      position:fixed;
-      bottom:25px;
-      right:25px;
-      background:#351d2b;
-      color:#fff;
-      padding:15px 22px;
-      border-radius:15px;
-      transform:translateY(130px);
-      transition:.35s;
-      z-index:3000;
-      box-shadow:0 10px 30px rgba(0,0,0,.2);
-    }
-
-    .toast.show{
-      transform:translateY(0)
-    }
-
-    /* =========================
-       LOADING
-    ========================= */
-
-    .loading{
-      padding:50px;
-      text-align:center;
-      color:var(--muted);
-      grid-column:1/-1;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media(max-width:1100px){
-
-      .products{
-        grid-template-columns:repeat(3,1fr)
-      }
-
-      .features{
-        grid-template-columns:repeat(2,1fr)
-      }
-
-      .slide-content h1{
-        font-size:48px
-      }
-    }
-
-    @media(max-width:700px){
-
-      .header-inner{
-        min-height:70px;
-        padding:0 12px;
-      }
-
-      .logo{
-        font-size:25px
-      }
-
-      .logo small{
-        font-size:6px;
-        letter-spacing:2px
-      }
-
-      .icon-btn{
-        width:38px;
-        height:38px;
-        font-size:17px;
-      }
-
-      .header-actions{
-        gap:6px
-      }
-
-      .hero{
-        padding:0 10px
-      }
-
-      .hero-slider{
-        height:450px;
-        border-radius:20px;
-      }
-
-      .slide{
-        padding:25px;
-        align-items:end;
-        padding-bottom:60px;
-      }
-
-      .slide-content h1{
-        font-size:35px
-      }
-
-      .slide-content p{
-        font-size:16px
-      }
-
-      .slide-content span{
-        font-size:15px
-      }
-
-      .products{
-        grid-template-columns:repeat(2,1fr);
-        gap:12px;
-      }
-
-      .product-image{
-        height:200px
-      }
-
-      .product-info{
-        padding:12px
-      }
-
-      .product-info h3{
-        font-size:14px
-      }
-
-      .price{
-        font-size:17px
-      }
-
-      .prime-price{
-        font-size:12px
-      }
-
-      .section{
-        margin:42px auto;
-        padding:0 12px;
-      }
-
-      .section-title h2{
-        font-size:25px
-      }
-
-      .category{
-        flex-basis:145px
-      }
-
-      .category img{
-        width:120px;
-        height:120px
-      }
-
-      .prime-inner{
-        padding:30px 20px;
-        flex-direction:column;
-        text-align:center;
-      }
-
-      .prime-inner h2{
-        font-size:30px
-      }
-
-      .features{
-        padding:0 12px;
-        gap:10px;
-      }
-
-      .footer-inner{
-        grid-template-columns:1fr;
-        text-align:center;
-      }
-
-      .socials{
-        justify-content:center
-      }
-
-      .toast{
-        right:12px;
-        left:12px;
-        text-align:center;
-      }
-    }
-  </style>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>Elora</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase-config.js"></script>
+
+<style>
+
+/* ==================================================
+   GENERAL
+   ================================================== */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+
+  --pink:#d92d82;
+  --pink-dark:#a91d60;
+  --pink-light:#fff0f7;
+  --purple:#70459f;
+  --text:#27232a;
+  --muted:#77717a;
+  --bg:#fff9fc;
+  --border:#f0dce7;
+
+}
+
+body{
+
+  font-family:Arial,Tahoma,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+
+}
+
+button{
+
+  font-family:inherit;
+  cursor:pointer;
+
+}
+
+img{
+
+  max-width:100%;
+  display:block;
+
+}
+
+
+/* ==================================================
+   TOP BAR
+   ================================================== */
+
+.top-bar{
+
+  background:
+  linear-gradient(
+    90deg,
+    var(--pink-dark),
+    var(--pink),
+    #ef69aa
+  );
+
+  color:#fff;
+  text-align:center;
+  padding:11px 15px;
+  font-size:14px;
+  font-weight:bold;
+
+}
+
+
+/* ==================================================
+   HEADER
+   ================================================== */
+
+header{
+
+  background:#fff;
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  border-bottom:
+  1px solid var(--border);
+
+  box-shadow:
+  0 3px 15px rgba(80,20,50,.06);
+
+}
+
+.header-inner{
+
+  max-width:1450px;
+  margin:auto;
+
+  min-height:82px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 25px;
+
+}
+
+.logo{
+
+  font-family:Georgia,serif;
+
+  color:var(--pink-dark);
+
+  font-size:34px;
+  font-weight:bold;
+
+  text-align:center;
+
+}
+
+.logo small{
+
+  display:block;
+
+  font-family:Arial,sans-serif;
+
+  font-size:8px;
+
+  letter-spacing:3px;
+
+  color:#777;
+
+}
+
+.header-actions{
+
+  display:flex;
+
+  gap:12px;
+
+  align-items:center;
+
+}
+
+.icon-btn{
+
+  width:45px;
+  height:45px;
+
+  border:
+  1px solid var(--border);
+
+  background:#fff;
+
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  font-size:20px;
+
+  color:var(--pink-dark);
+
+  position:relative;
+
+}
+
+.cart-count{
+
+  position:absolute;
+
+  top:-4px;
+  left:-3px;
+
+  background:var(--pink);
+
+  color:#fff;
+
+  width:20px;
+  height:20px;
+
+  border-radius:50%;
+
+  font-size:11px;
+
+  display:grid;
+  place-items:center;
+
+}
+
+.menu-btn{
+
+  border:0;
+
+  background:none;
+
+  font-size:30px;
+
+  color:var(--pink-dark);
+
+}
+
+
+/* ==================================================
+   HERO
+   ================================================== */
+
+.hero{
+
+  max-width:1450px;
+
+  margin:20px auto 0;
+
+  padding:0 18px;
+
+}
+
+.hero-slider{
+
+  height:480px;
+
+  position:relative;
+
+  overflow:hidden;
+
+  border-radius:28px;
+
+  box-shadow:
+  0 10px 35px rgba(100,20,60,.14);
+
+}
+
+.slide{
+
+  position:absolute;
+
+  inset:0;
+
+  opacity:0;
+
+  transition:
+  opacity .7s ease;
+
+  display:flex;
+
+  align-items:center;
+
+  padding:70px;
+
+  background-size:cover;
+
+  background-position:center;
+
+}
+
+.slide.active{
+
+  opacity:1;
+
+}
+
+.slide:nth-child(1){
+
+  background:
+
+  linear-gradient(
+    90deg,
+    rgba(255,240,248,.98),
+    rgba(255,240,248,.50)
+  ),
+
+  url(
+    "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1800&q=90"
+  );
+
+}
+
+.slide:nth-child(2){
+
+  background:
+
+  linear-gradient(
+    90deg,
+    rgba(247,229,241,.98),
+    rgba(247,229,241,.50)
+  ),
+
+  url(
+    "https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?auto=format&fit=crop&w=1800&q=90"
+  );
+
+}
+
+.slide:nth-child(3){
+
+  background:
+
+  linear-gradient(
+    90deg,
+    rgba(239,226,248,.98),
+    rgba(239,226,248,.50)
+  ),
+
+  url(
+    "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1800&q=90"
+  );
+
+}
+
+.slide-content{
+
+  max-width:620px;
+
+}
+
+.slide-content span{
+
+  color:var(--pink-dark);
+
+  font-weight:bold;
+
+  font-size:18px;
+
+}
+
+.slide-content h1{
+
+  font-size:58px;
+
+  margin:14px 0;
+
+  color:#521d3b;
+
+}
+
+.slide-content p{
+
+  font-size:21px;
+
+  line-height:1.9;
+
+  margin-bottom:25px;
+
+}
+
+.main-btn,
+.prime-btn{
+
+  border:0;
+
+  color:#fff;
+
+  padding:15px 32px;
+
+  border-radius:30px;
+
+  font-size:17px;
+
+  font-weight:bold;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--pink-dark),
+    var(--pink)
+  );
+
+}
+
+.slider-arrow{
+
+  position:absolute;
+
+  top:50%;
+
+  transform:translateY(-50%);
+
+  width:48px;
+  height:48px;
+
+  border:0;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,.92);
+
+  color:var(--pink-dark);
+
+  font-size:27px;
+
+  z-index:5;
+
+}
+
+.arrow-right{
+
+  right:18px;
+
+}
+
+.arrow-left{
+
+  left:18px;
+
+}
+
+.dots{
+
+  position:absolute;
+
+  bottom:18px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  display:flex;
+
+  gap:8px;
+
+  z-index:10;
+
+}
+
+.dot{
+
+  width:10px;
+  height:10px;
+
+  background:#fff;
+
+  border-radius:50%;
+
+  opacity:.7;
+
+}
+
+.dot.active{
+
+  width:26px;
+
+  background:var(--pink);
+
+  border-radius:20px;
+
+  opacity:1;
+
+}
+
+
+/* ==================================================
+   SECTIONS
+   ================================================== */
+
+.section{
+
+  max-width:1450px;
+
+  margin:58px auto;
+
+  padding:0 18px;
+
+}
+
+.section-title{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:end;
+
+  margin-bottom:25px;
+
+}
+
+.section-title h2{
+
+  font-size:32px;
+
+  color:#3f2634;
+
+}
+
+.see-all{
+
+  color:var(--pink-dark);
+
+  font-weight:bold;
+
+}
+
+
+/* ==================================================
+   CATEGORIES
+   ================================================== */
+
+.categories-wrapper{
+
+  width:100%;
+
+  overflow:hidden;
+
+  position:relative;
+
+  direction:ltr;
+
+  user-select:none;
+
+  -webkit-user-select:none;
+
+  /*
+    منع المتصفح من تحريك الصفحة
+    أثناء السحب الأفقي
+  */
+
+  touch-action:pan-y;
+
+  cursor:grab;
+
+}
+
+.categories-wrapper:active{
+
+  cursor:grabbing;
+
+}
+
+.categories{
+
+  display:flex;
+
+  width:max-content;
+
+  gap:20px;
+
+  padding:10px 4px 25px;
+
+  /*
+    لا يوجد CSS animation هنا.
+
+    JavaScript هو المسؤول عن الحركة،
+    وده يمنع القفزة بعد السحب.
+  */
+
+  animation:none !important;
+
+  will-change:transform;
+
+}
+
+.category{
+
+  direction:rtl;
+
+  flex:0 0 175px;
+
+  background:#fff;
+
+  border:
+  1px solid var(--border);
+
+  border-radius:28px;
+
+  padding:13px;
+
+  text-align:center;
+
+  box-shadow:
+  0 6px 18px rgba(90,20,50,.07);
+
+  transition:
+  transform .25s,
+  box-shadow .25s;
+
+  cursor:grab;
+
+}
+
+.category:active{
+
+  cursor:grabbing;
+
+}
+
+.category:hover{
+
+  transform:translateY(-5px);
+
+  box-shadow:
+  0 12px 28px rgba(90,20,50,.13);
+
+}
+
+.category img{
+
+  width:145px;
+
+  height:145px;
+
+  border-radius:23px;
+
+  object-fit:cover;
+
+  margin:0 auto 12px;
+
+  pointer-events:none;
+
+}
+
+.category strong{
+
+  font-size:17px;
+
+  display:block;
+
+}
+
+
+/* ==================================================
+   PRODUCTS
+   ================================================== */
+
+.products{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(4,1fr);
+
+  gap:25px;
+
+}
+
+.product{
+
+  background:#fff;
+
+  border:
+  1px solid var(--border);
+
+  border-radius:23px;
+
+  overflow:hidden;
+
+  position:relative;
+
+  transition:.3s;
+
+}
+
+.product:hover{
+
+  transform:translateY(-6px);
+
+  box-shadow:
+  0 16px 32px rgba(80,20,50,.12);
+
+}
+
+.product-image{
+
+  height:310px;
+
+  position:relative;
+
+  overflow:hidden;
+
+  background:#faf4f7;
+
+}
+
+.product-image img{
+
+  width:100%;
+
+  height:100%;
+
+  object-fit:cover;
+
+}
+
+.discount,
+.prime-badge{
+
+  position:absolute;
+
+  right:13px;
+
+  color:#fff;
+
+  border-radius:20px;
+
+  padding:7px 11px;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+  z-index:2;
+
+}
+
+.discount{
+
+  top:13px;
+
+  background:var(--pink);
+
+}
+
+.prime-badge{
+
+  top:51px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #6f429f,
+    #9b6ac7
+  );
+
+}
+
+.favorite{
+
+  position:absolute;
+
+  top:12px;
+
+  left:12px;
+
+  width:40px;
+  height:40px;
+
+  border-radius:50%;
+
+  border:0;
+
+  background:
+  rgba(255,255,255,.93);
+
+  color:var(--pink);
+
+  font-size:21px;
+
+}
+
+.product-info{
+
+  padding:17px;
+
+}
+
+.product-info h3{
+
+  font-size:17px;
+
+  margin-bottom:11px;
+
+  min-height:42px;
+
+}
+
+.price-row{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+}
+
+.price{
+
+  font-size:21px;
+
+  font-weight:bold;
+
+  color:var(--pink-dark);
+
+}
+
+.old-price{
+
+  color:#aaa;
+
+  text-decoration:line-through;
+
+  font-size:14px;
+
+}
+
+.prime-price{
+
+  margin-top:9px;
+
+  color:#70459f;
+
+  font-weight:bold;
+
+  font-size:14px;
+
+}
+
+.add-cart{
+
+  width:100%;
+
+  margin-top:14px;
+
+  padding:12px;
+
+  border:0;
+
+  border-radius:13px;
+
+  background:var(--pink-light);
+
+  color:var(--pink-dark);
+
+  font-weight:bold;
+
+}
+
+.empty-products{
+
+  grid-column:1/-1;
+
+  background:#fff;
+
+  border:
+  1px dashed var(--border);
+
+  border-radius:20px;
+
+  padding:50px 20px;
+
+  text-align:center;
+
+  color:var(--muted);
+
+}
+
+
+/* ==================================================
+   PRIME
+   ================================================== */
+
+.prime-box{
+
+  max-width:1450px;
+
+  margin:70px auto;
+
+  padding:0 18px;
+
+}
+
+.prime-inner{
+
+  border-radius:30px;
+
+  padding:50px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #eee2f8,
+    #d9c3ed,
+    #f4eafa
+  );
+
+  border:
+  1px solid #d4bce8;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:40px;
+
+}
+
+.prime-inner h2{
+
+  color:#684093;
+
+  font-size:38px;
+
+  margin-bottom:14px;
+
+}
+
+.prime-inner p{
+
+  line-height:2;
+
+}
+
+.prime-list{
+
+  margin-top:14px;
+
+  line-height:2.1;
+
+}
+
+.prime-price-box{
+
+  text-align:center;
+
+  min-width:230px;
+
+}
+
+.prime-price-box strong{
+
+  display:block;
+
+  color:#63378d;
+
+  font-size:42px;
+
+}
+
+
+/* ==================================================
+   FEATURES
+   ================================================== */
+
+.features{
+
+  max-width:1450px;
+
+  margin:60px auto;
+
+  padding:0 18px;
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(4,1fr);
+
+  gap:18px;
+
+}
+
+.feature{
+
+  background:#fff;
+
+  border:
+  1px solid var(--border);
+
+  border-radius:21px;
+
+  padding:25px 15px;
+
+  text-align:center;
+
+}
+
+.feature-icon{
+
+  font-size:32px;
+
+  margin-bottom:11px;
+
+}
+
+.feature h3{
+
+  font-size:16px;
+
+  margin-bottom:7px;
+
+}
+
+.feature p{
+
+  color:var(--muted);
+
+  font-size:13px;
+
+}
+
+
+/* ==================================================
+   FOOTER
+   ================================================== */
+
+footer{
+
+  background:#351d2b;
+
+  color:#fff;
+
+  margin-top:80px;
+
+  padding:55px 20px 25px;
+
+}
+
+.footer-inner{
+
+  max-width:1450px;
+
+  margin:auto;
+
+  display:grid;
+
+  grid-template-columns:
+  1.5fr 1fr 1fr;
+
+  gap:45px;
+
+}
+
+footer h2{
+
+  color:#f49ac3;
+
+  margin-bottom:15px;
+
+}
+
+footer p{
+
+  color:#dbcbd3;
+
+  line-height:2;
+
+}
+
+.socials{
+
+  display:flex;
+
+  gap:12px;
+
+  margin-top:20px;
+
+}
+
+.social{
+
+  width:48px;
+
+  height:48px;
+
+  border-radius:50%;
+
+  background:#fff;
+
+  color:#6f2d50;
+
+  display:grid;
+
+  place-items:center;
+
+  font-weight:bold;
+
+  font-size:20px;
+
+}
+
+.footer-bottom{
+
+  max-width:1450px;
+
+  margin:38px auto 0;
+
+  padding-top:20px;
+
+  border-top:
+  1px solid rgba(255,255,255,.15);
+
+  text-align:center;
+
+  color:#c9b7c0;
+
+  font-size:13px;
+
+}
+
+
+/* ==================================================
+   TOAST
+   ================================================== */
+
+.toast{
+
+  position:fixed;
+
+  bottom:25px;
+
+  right:25px;
+
+  background:#351d2b;
+
+  color:#fff;
+
+  padding:15px 22px;
+
+  border-radius:15px;
+
+  transform:translateY(130px);
+
+  transition:.35s;
+
+  z-index:3000;
+
+}
+
+.toast.show{
+
+  transform:translateY(0);
+
+}
+
+.loading{
+
+  padding:50px;
+
+  text-align:center;
+
+  color:var(--muted);
+
+  grid-column:1/-1;
+
+}
+
+
+/* ==================================================
+   MOBILE
+   ================================================== */
+
+@media(max-width:1100px){
+
+  .products{
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+  }
+
+  .features{
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+  }
+
+  .slide-content h1{
+
+    font-size:48px;
+
+  }
+
+}
+
+
+@media(max-width:700px){
+
+  .header-inner{
+
+    min-height:70px;
+
+    padding:0 12px;
+
+  }
+
+  .logo{
+
+    font-size:25px;
+
+  }
+
+  .icon-btn{
+
+    width:38px;
+    height:38px;
+
+    font-size:17px;
+
+  }
+
+  .header-actions{
+
+    gap:6px;
+
+  }
+
+  .hero{
+
+    padding:0 10px;
+
+  }
+
+  .hero-slider{
+
+    height:450px;
+
+    border-radius:20px;
+
+  }
+
+  .slide{
+
+    padding:25px;
+
+    align-items:end;
+
+    padding-bottom:60px;
+
+  }
+
+  .slide-content h1{
+
+    font-size:35px;
+
+  }
+
+  .slide-content p{
+
+    font-size:16px;
+
+  }
+
+  .products{
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:12px;
+
+  }
+
+  .product-image{
+
+    height:200px;
+
+  }
+
+  .product-info{
+
+    padding:12px;
+
+  }
+
+  .product-info h3{
+
+    font-size:14px;
+
+  }
+
+  .price{
+
+    font-size:17px;
+
+  }
+
+  .section{
+
+    margin:42px auto;
+
+    padding:0 12px;
+
+  }
+
+  .section-title h2{
+
+    font-size:25px;
+
+  }
+
+  .category{
+
+    flex-basis:145px;
+
+  }
+
+  .category img{
+
+    width:120px;
+
+    height:120px;
+
+  }
+
+  .categories{
+
+    gap:14px;
+
+  }
+
+  .prime-inner{
+
+    padding:30px 20px;
+
+    flex-direction:column;
+
+    text-align:center;
+
+  }
+
+  .prime-inner h2{
+
+    font-size:30px;
+
+  }
+
+  .features{
+
+    padding:0 12px;
+
+    gap:10px;
+
+  }
+
+  .footer-inner{
+
+    grid-template-columns:1fr;
+
+    text-align:center;
+
+  }
+
+  .socials{
+
+    justify-content:center;
+
+  }
+
+  .toast{
+
+    right:12px;
+
+    left:12px;
+
+    text-align:center;
+
+  }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-  <!-- TOP BAR -->
-  <div class="top-bar" id="topBar">
-    ✨ عروض مميزة وأسعار خاصة لفترة محدودة ✨
-  </div>
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-inner">
+<!-- ==================================================
+     TOP BAR
+     ================================================== -->
 
-      <div class="header-actions">
+<div class="top-bar">
 
-        <button
-          class="icon-btn"
-          onclick="showMessage('المفضلة قريبًا ❤️')">
-          ♡
-        </button>
+✨ عروض مميزة وأسعار خاصة لفترة محدودة ✨
 
-        <button
-          class="icon-btn"
-          onclick="openLogin()">
-          ♙
-        </button>
+</div>
 
-        <button
-          class="icon-btn"
-          onclick="openCart()">
 
-          🛍
+<!-- ==================================================
+     HEADER
+     ================================================== -->
 
-          <span
-            class="cart-count"
-            id="cartCount">
-            0
-          </span>
+<header>
 
-        </button>
+<div class="header-inner">
 
-      </div>
 
-      <div class="logo">
-        Elora
-        <small>JEWELRY & ACCESSORIES</small>
-      </div>
+<div class="header-actions">
 
-      <button
-        class="menu-btn"
-        onclick="showMessage('القائمة الرئيسية قريبًا')">
-        ☰
-      </button>
+<button
+class="icon-btn"
+onclick="showMessage('المفضلة قريبًا ❤️')"
+>
+♡
+</button>
 
-    </div>
-  </header>
 
-  <!-- MAIN -->
-  <main>
+<button
+class="icon-btn"
+onclick="openLogin()"
+>
+♙
+</button>
 
-    <!-- HERO -->
-    <section class="hero">
 
-      <div class="hero-slider">
+<button
+class="icon-btn"
+onclick="openCart()"
+>
 
-        <div class="slide active">
+🛍
 
-          <div class="slide-content">
+<span
+class="cart-count"
+id="cartCount"
+>
+0
+</span>
 
-            <span>
-              عروض خاصة
-            </span>
+</button>
 
-            <h1>
-              أناقتك تبدأ من هنا
-            </h1>
+</div>
 
-            <p>
-              اكتشفي تشكيلتنا المختارة من الإكسسوارات،
-              الساعات، الشنط، المكياج واللانجري.
-            </p>
 
-            <button
-              class="main-btn"
-              onclick="scrollToProducts()">
-              تسوقي الآن
-            </button>
+<div class="logo">
 
-          </div>
+Elora
 
-        </div>
+<small>
+JEWELRY & ACCESSORIES
+</small>
 
-        <div class="slide">
+</div>
 
-          <div class="slide-content">
 
-            <span>
-              خصومات مميزة
-            </span>
+<button
+class="menu-btn"
+onclick="showMessage('القائمة الرئيسية قريبًا')"
+>
 
-            <h1>
-              اختاري إطلالتك
-            </h1>
+☰
 
-            <p>
-              منتجات مميزة وأسعار خاصة لفترة محدودة.
-            </p>
+</button>
 
-            <button
-              class="main-btn"
-              onclick="scrollToProducts()">
-              اكتشفي العروض
-            </button>
 
-          </div>
+</div>
 
-        </div>
+</header>
 
-        <div class="slide">
 
-          <div class="slide-content">
+<main>
 
-            <span>
-              Elora Prime 👑
-            </span>
 
-            <h1>
-              مميزات أكثر
-            </h1>
+<!-- ==================================================
+     HERO
+     ================================================== -->
 
-            <p>
-              خصم إضافي 10% وشحن مجاني حتى 5 طلبات
-              شهريًا وتغليف خاص وثيم موف مميز.
-            </p>
+<section class="hero">
 
-            <button
-              class="prime-btn"
-              onclick="openPrime()">
-              اكتشفي Prime
-            </button>
+<div class="hero-slider">
 
-          </div>
 
-        </div>
+<div class="slide active">
 
-        <button
-          class="slider-arrow arrow-right"
-          onclick="changeSlide(-1)">
-          ›
-        </button>
+<div class="slide-content">
 
-        <button
-          class="slider-arrow arrow-left"
-          onclick="changeSlide(1)">
-          ‹
-        </button>
+<span>
+عروض خاصة
+</span>
 
-        <div class="dots">
+<h1>
+أناقتك تبدأ من هنا
+</h1>
 
-          <span
-            class="dot active"
-            onclick="goToSlide(0)">
-          </span>
+<p>
 
-          <span
-            class="dot"
-            onclick="goToSlide(1)">
-          </span>
+اكتشفي تشكيلتنا المختارة من الإكسسوارات،
+الساعات، الشنط، المكياج واللانجري.
 
-          <span
-            class="dot"
-            onclick="goToSlide(2)">
-          </span>
+</p>
 
-        </div>
+<button
+class="main-btn"
+onclick="scrollToProducts()"
+>
 
-      </div>
+تسوقي الآن
 
-    </section>
+</button>
 
-    <!-- CATEGORIES -->
-    <section class="section">
+</div>
 
-      <div class="section-title">
+</div>
 
-        <h2>
-          الأقسام
-        </h2>
 
-        <a
-          class="see-all"
-          href="#products">
-          عرض الكل ←
-        </a>
+<div class="slide">
 
-      </div>
+<div class="slide-content">
 
-      <div class="categories-wrapper">
+<span>
+خصومات مميزة
+</span>
 
-        <div class="categories" id="categories">
+<h1>
+اختاري إطلالتك
+</h1>
 
-          <div class="category">
-            <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=500&q=80">
-            <strong>لانجري</strong>
-          </div>
+<p>
 
-          <div class="category">
-            <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=500&q=80">
-            <strong>إكسسوارات</strong>
-          </div>
+منتجات مميزة وأسعار خاصة لفترة محدودة.
 
-          <div class="category">
-            <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=80">
-            <strong>ساعات حريمي</strong>
-          </div>
+</p>
 
-          <div class="category">
-            <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=500&q=80">
-            <strong>ساعات رجالي</strong>
-          </div>
+<button
+class="main-btn"
+onclick="scrollToProducts()"
+>
 
-          <div class="category">
-            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=80">
-            <strong>شنط حريمي</strong>
-          </div>
+اكتشفي العروض
 
-          <div class="category">
-            <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=80">
-            <strong>شنط مدارس</strong>
-          </div>
+</button>
 
-          <div class="category">
-            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=500&q=80">
-            <strong>مكياج</strong>
-          </div>
+</div>
 
-        </div>
+</div>
 
-      </div>
 
-    </section>
+<div class="slide">
 
-    <!-- PRODUCTS -->
-    <section
-      class="section"
-      id="products">
+<div class="slide-content">
 
-      <div class="section-title">
+<span>
+Elora Prime 👑
+</span>
 
-        <h2>
-          منتجات مميزة
-        </h2>
+<h1>
+مميزات أكثر
+</h1>
 
-        <a
-          class="see-all"
-          href="#products">
-          عرض الكل ←
-        </a>
+<p>
 
-      </div>
+خصم إضافي 10% وشحن مجاني حتى 5 طلبات
+شهريًا وتغليف خاص وثيم موف مميز.
 
-      <div
-        class="products"
-        id="productsGrid">
+</p>
 
-        <div class="loading">
-          جاري تحميل المنتجات...
-        </div>
+<button
+class="prime-btn"
+onclick="openPrime()"
+>
 
-      </div>
+اكتشفي Prime
 
-    </section>
+</button>
 
-    <!-- PRIME -->
-    <section class="prime-box">
+</div>
 
-      <div class="prime-inner">
+</div>
 
-        <div>
 
-          <h2>
-            👑 Elora Prime
-          </h2>
+<button
+class="slider-arrow arrow-right"
+onclick="changeSlide(-1)"
+>
+›
+</button>
 
-          <p>
-            خلي تجربتك مع Elora أكثر تميزًا.
-          </p>
 
-          <div class="prime-list">
+<button
+class="slider-arrow arrow-left"
+onclick="changeSlide(1)"
+>
+‹
+</button>
 
-            ✓ اشتراك شهري 300 ج.م<br>
 
-            ✓ خصم إضافي 10% فوق خصم المنتج<br>
+<div class="dots">
 
-            ✓ شحن مجاني حتى 5 طلبات شهريًا<br>
+<span
+class="dot active"
+onclick="goToSlide(0)"
+></span>
 
-            ✓ تغليف خاص لطلبات Prime<br>
+<span
+class="dot"
+onclick="goToSlide(1)"
+></span>
 
-            ✓ ثيم موف خاص للمشترك
+<span
+class="dot"
+onclick="goToSlide(2)"
+></span>
 
-          </div>
+</div>
 
-        </div>
 
-        <div class="prime-price-box">
+</div>
 
-          <strong>
-            300 ج.م
-          </strong>
+</section>
 
-          <span>
-            لمدة شهر
-          </span>
 
-          <br>
+<!-- ==================================================
+     CATEGORIES
+     ================================================== -->
 
-          <button
-            class="prime-btn"
-            onclick="openPrime()">
-            اشتركي في Prime
-          </button>
+<section class="section">
 
-        </div>
 
-      </div>
+<div class="section-title">
 
-    </section>
+<h2>
+الأقسام
+</h2>
 
-    <!-- FEATURES -->
-    <section class="features">
+<a
+class="see-all"
+href="#products"
+>
+عرض الكل ←
+</a>
 
-      <div class="feature">
+</div>
 
-        <div class="feature-icon">
-          🚚
-        </div>
 
-        <h3>
-          شحن سريع
-        </h3>
+<div class="categories-wrapper">
 
-        <p>
-          توصيل إلى جميع المحافظات
-        </p>
+<div
+class="categories"
+id="categories"
+>
 
-      </div>
 
-      <div class="feature">
+<!-- المجموعة الأولى -->
 
-        <div class="feature-icon">
-          💳
-        </div>
 
-        <h3>
-          طرق دفع متعددة
-        </h3>
+<div class="category">
 
-        <p>
-          خيارات دفع متنوعة وآمنة
-        </p>
+<img
+src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=500&q=80"
+>
 
-      </div>
+<strong>
+لانجري
+</strong>
 
-      <div class="feature">
+</div>
 
-        <div class="feature-icon">
-          ✨
-        </div>
 
-        <h3>
-          منتجات مميزة
-        </h3>
+<div class="category">
 
-        <p>
-          اختيارات تناسب إطلالتك
-        </p>
+<img
+src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=500&q=80"
+>
 
-      </div>
+<strong>
+إكسسوارات
+</strong>
 
-      <div class="feature">
+</div>
 
-        <div class="feature-icon">
-          💬
-        </div>
 
-        <h3>
-          دعم واتساب
-        </h3>
+<div class="category">
 
-        <p>
-          01050591500
-        </p>
+<img
+src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=80"
+>
 
-      </div>
+<strong>
+ساعات حريمي
+</strong>
 
-    </section>
+</div>
 
-  </main>
 
-  <!-- FOOTER -->
-  <footer>
+<div class="category">
 
-    <div class="footer-inner">
+<img
+src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=500&q=80"
+>
 
-      <div>
+<strong>
+ساعات رجالي
+</strong>
 
-        <h2>
-          Elora
-        </h2>
+</div>
 
-        <p>
-          Jewelry & Accessories
-          <br>
-          اختاري تفاصيلك، واصنعي إطلالتك.
-        </p>
 
-        <div class="socials">
+<div class="category">
 
-          <a
-            class="social"
-            href="#"
-            aria-label="Facebook">
-            f
-          </a>
+<img
+src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=80"
+>
 
-          <a
-            class="social"
-            href="https://wa.me/201050591500"
-            target="_blank"
-            aria-label="WhatsApp">
-            ◔
-          </a>
+<strong>
+شنط حريمي
+</strong>
 
-          <a
-            class="social"
-            href="#"
-            aria-label="Instagram">
-            ◎
-          </a>
+</div>
 
-        </div>
 
-      </div>
+<div class="category">
 
-      <div>
+<img
+src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=80"
+>
 
-        <h2>
-          تواصل معنا
-        </h2>
+<strong>
+شنط مدارس
+</strong>
 
-        <p>
-          واتساب: 01050591500
-          <br>
-          خدمة العملاء
-          <br>
-          جميع محافظات مصر
-        </p>
+</div>
 
-      </div>
 
-      <div>
+<div class="category">
 
-        <h2>
-          روابط مهمة
-        </h2>
+<img
+src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=500&q=80"
+>
 
-        <p>
-          المنتجات
-          <br>
-          الأقسام
-          <br>
-          العروض
-          <br>
-          Elora Prime
-        </p>
+<strong>
+مكياج
+</strong>
 
-      </div>
+</div>
 
-    </div>
 
-    <div class="footer-bottom">
+<!-- المجموعة الثانية -->
 
-      © 2026 Elora — جميع الحقوق محفوظة
 
-    </div>
+<div class="category">
 
-  </footer>
+<img
+src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=500&q=80"
+>
 
-  <!-- TOAST -->
-  <div
-    class="toast"
-    id="toast">
-  </div>
+<strong>
+لانجري
+</strong>
 
+</div>
 
-  <script>
 
-    /* ==========================================
-       ELORA STORE
-       FRONTEND + SUPABASE
-    ========================================== */
+<div class="category">
 
+<img
+src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=500&q=80"
+>
 
-    /* ==========================================
-       SLIDER
-    ========================================== */
+<strong>
+إكسسوارات
+</strong>
 
-    let currentSlide = 0;
+</div>
 
-    const slides =
-      document.querySelectorAll(".slide");
 
-    const dots =
-      document.querySelectorAll(".dot");
+<div class="category">
 
+<img
+src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=80"
+>
 
-    function showSlide(index){
+<strong>
+ساعات حريمي
+</strong>
 
-      currentSlide =
-        (index + slides.length) % slides.length;
+</div>
 
-      slides.forEach((slide,i)=>{
 
-        slide.classList.toggle(
-          "active",
-          i === currentSlide
-        );
+<div class="category">
 
-      });
+<img
+src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=500&q=80"
+>
 
-      dots.forEach((dot,i)=>{
+<strong>
+ساعات رجالي
+</strong>
 
-        dot.classList.toggle(
-          "active",
-          i === currentSlide
-        );
+</div>
 
-      });
 
-    }
+<div class="category">
 
+<img
+src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=80"
+>
 
-    function changeSlide(direction){
+<strong>
+شنط حريمي
+</strong>
 
-      showSlide(
-        currentSlide + direction
+</div>
+
+
+<div class="category">
+
+<img
+src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=80"
+>
+
+<strong>
+شنط مدارس
+</strong>
+
+</div>
+
+
+<div class="category">
+
+<img
+src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=500&q=80"
+>
+
+<strong>
+مكياج
+</strong>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     PRODUCTS
+     ================================================== -->
+
+<section
+class="section"
+id="products"
+>
+
+<div class="section-title">
+
+<h2>
+منتجات مميزة
+</h2>
+
+<a
+class="see-all"
+href="#products"
+>
+عرض الكل ←
+</a>
+
+</div>
+
+
+<div
+class="products"
+id="productsGrid"
+>
+
+<div class="loading">
+جاري تحميل المنتجات...
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     PRIME
+     ================================================== -->
+
+<section class="prime-box">
+
+<div class="prime-inner">
+
+
+<div>
+
+<h2>
+👑 Elora Prime
+</h2>
+
+<p>
+خلي تجربتك مع Elora أكثر تميزًا.
+</p>
+
+<div class="prime-list">
+
+✓ اشتراك شهري 300 ج.م
+<br>
+
+✓ خصم إضافي 10% فوق خصم المنتج
+<br>
+
+✓ شحن مجاني حتى 5 طلبات شهريًا
+<br>
+
+✓ تغليف خاص لطلبات Prime
+<br>
+
+✓ ثيم موف خاص للمشترك
+
+</div>
+
+</div>
+
+
+<div class="prime-price-box">
+
+<strong>
+300 ج.م
+</strong>
+
+<span>
+لمدة شهر
+</span>
+
+<br>
+
+<button
+class="prime-btn"
+onclick="openPrime()"
+>
+
+اشتركي في Prime
+
+</button>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     FEATURES
+     ================================================== -->
+
+<section class="features">
+
+
+<div class="feature">
+
+<div class="feature-icon">
+🚚
+</div>
+
+<h3>
+شحن سريع
+</h3>
+
+<p>
+توصيل إلى جميع المحافظات
+</p>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+💳
+</div>
+
+<h3>
+طرق دفع متعددة
+</h3>
+
+<p>
+خيارات دفع متنوعة وآمنة
+</p>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+✨
+</div>
+
+<h3>
+منتجات مميزة
+</h3>
+
+<p>
+اختيارات تناسب إطلالتك
+</p>
+
+</div>
+
+
+<div class="feature">
+
+<div class="feature-icon">
+💬
+</div>
+
+<h3>
+دعم واتساب
+</h3>
+
+<p>
+01050591500
+</p>
+
+</div>
+
+
+</section>
+
+
+</main>
+
+
+<!-- ==================================================
+     FOOTER
+     ================================================== -->
+
+<footer>
+
+
+<div class="footer-inner">
+
+
+<div>
+
+<h2>
+Elora
+</h2>
+
+<p>
+
+Jewelry & Accessories
+<br>
+
+اختاري تفاصيلك، واصنعي إطلالتك.
+
+</p>
+
+
+<div class="socials">
+
+
+<a
+class="social"
+href="#"
+>
+f
+</a>
+
+
+<a
+class="social"
+href="https://wa.me/201050591500"
+target="_blank"
+>
+◔
+</a>
+
+
+<a
+class="social"
+href="#"
+>
+◎
+</a>
+
+
+</div>
+
+</div>
+
+
+<div>
+
+<h2>
+تواصل معنا
+</h2>
+
+<p>
+
+واتساب: 01050591500
+<br>
+
+خدمة العملاء
+<br>
+
+جميع محافظات مصر
+
+</p>
+
+</div>
+
+
+<div>
+
+<h2>
+روابط مهمة
+</h2>
+
+<p>
+
+المنتجات
+<br>
+
+الأقسام
+<br>
+
+العروض
+<br>
+
+Elora Prime
+
+</p>
+
+</div>
+
+
+</div>
+
+
+<div class="footer-bottom">
+
+© 2026 Elora — جميع الحقوق محفوظة
+
+</div>
+
+
+</footer>
+
+
+<!-- ==================================================
+     TOAST
+     ================================================== -->
+
+<div
+class="toast"
+id="toast"
+></div>
+
+
+<script>
+
+
+/* ==================================================
+   SLIDER
+   ================================================== */
+
+let currentSlide=0;
+
+const slides=
+document.querySelectorAll(".slide");
+
+const dots=
+document.querySelectorAll(".dot");
+
+
+function showSlide(index){
+
+  currentSlide=
+  (index+slides.length)%slides.length;
+
+  slides.forEach(
+    (slide,i)=>{
+
+      slide.classList.toggle(
+        "active",
+        i===currentSlide
       );
 
     }
+  );
 
+  dots.forEach(
+    (dot,i)=>{
 
-    function goToSlide(index){
-
-      showSlide(index);
-
-    }
-
-
-    setInterval(()=>{
-
-      showSlide(currentSlide + 1);
-
-    },2000);
-
-
-    /* ==========================================
-       TOAST
-    ========================================== */
-
-    let toastTimer;
-
-
-    function showMessage(message){
-
-      const toast =
-        document.getElementById("toast");
-
-      toast.textContent = message;
-
-      toast.classList.add("show");
-
-      clearTimeout(toastTimer);
-
-      toastTimer =
-        setTimeout(()=>{
-
-          toast.classList.remove("show");
-
-        },2500);
-
-    }
-
-
-    /* ==========================================
-       CART
-    ========================================== */
-
-    let cart = [];
-
-    try{
-
-      cart =
-        JSON.parse(
-          localStorage.getItem("elora_cart")
-        ) || [];
-
-    }catch(e){
-
-      cart = [];
-
-    }
-
-
-    function updateCartCount(){
-
-      const count =
-        cart.reduce(
-          (total,item)=>total + item.quantity,
-          0
-        );
-
-      document.getElementById(
-        "cartCount"
-      ).textContent = count;
-
-    }
-
-
-    function saveCart(){
-
-      localStorage.setItem(
-        "elora_cart",
-        JSON.stringify(cart)
-      );
-
-      updateCartCount();
-
-    }
-
-
-    function addToCart(product){
-
-      const existing =
-        cart.find(
-          item => item.id === product.id
-        );
-
-      if(existing){
-
-        existing.quantity++;
-
-      }else{
-
-        cart.push({
-
-          ...product,
-
-          quantity:1
-
-        });
-
-      }
-
-      saveCart();
-
-      showMessage(
-        "تمت إضافة المنتج إلى السلة 🛍️"
+      dot.classList.toggle(
+        "active",
+        i===currentSlide
       );
 
     }
+  );
+
+}
 
 
-    function openCart(){
+function changeSlide(direction){
 
-      if(cart.length === 0){
+  showSlide(
+    currentSlide+direction
+  );
 
-        showMessage(
-          "السلة فارغة حاليًا"
-        );
+}
 
-        return;
 
-      }
+function goToSlide(index){
 
-      let message =
-        "🛍️ المنتجات في السلة:\n\n";
+  showSlide(index);
 
-      cart.forEach(item=>{
+}
 
-        message +=
-          `${item.name} × ${item.quantity}\n`;
 
-      });
+setInterval(
+  ()=>{
 
-      alert(message);
+    showSlide(
+      currentSlide+1
+    );
+
+  },
+  4000
+);
+
+
+/* ==================================================
+   TOAST
+   ================================================== */
+
+let toastTimer;
+
+
+function showMessage(message){
+
+  const toast=
+  document.getElementById("toast");
+
+  toast.textContent=message;
+
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer=
+  setTimeout(
+    ()=>{
+
+      toast.classList.remove("show");
+
+    },
+    2500
+  );
+
+}
+
+
+/* ==================================================
+   CART
+   ================================================== */
+
+let cart=[];
+
+
+try{
+
+  cart=
+  JSON.parse(
+    localStorage.getItem("elora_cart")
+  )||[];
+
+}catch(e){
+
+  cart=[];
+
+}
+
+
+function updateCartCount(){
+
+  const count=
+  cart.reduce(
+    (total,item)=>
+    total+(item.quantity||0),
+    0
+  );
+
+  document.getElementById(
+    "cartCount"
+  ).textContent=count;
+
+}
+
+
+function saveCart(){
+
+  localStorage.setItem(
+    "elora_cart",
+    JSON.stringify(cart)
+  );
+
+  updateCartCount();
+
+}
+
+
+function addToCart(product){
+
+  const existing=
+  cart.find(
+    item=>item.id===product.id
+  );
+
+
+  if(existing){
+
+    existing.quantity++;
+
+  }else{
+
+    cart.push({
+
+      ...product,
+
+      quantity:1
+
+    });
+
+  }
+
+
+  saveCart();
+
+  showMessage(
+    "تمت إضافة المنتج إلى السلة 🛍️"
+  );
+
+}
+
+
+function openCart(){
+
+  if(cart.length===0){
+
+    showMessage(
+      "السلة فارغة حاليًا"
+    );
+
+    return;
+
+  }
+
+
+  let message=
+  "🛍️ المنتجات في السلة:\n\n";
+
+
+  cart.forEach(
+    item=>{
+
+      message+=
+      `${item.name} × ${item.quantity}\n`;
+
+    }
+  );
+
+
+  alert(message);
+
+}
+
+
+updateCartCount();
+
+
+/* ==================================================
+   PRODUCT HELPERS
+   ================================================== */
+
+function getValue(
+  row,
+  names,
+  defaultValue=""
+){
+
+  for(
+    const name of names
+  ){
+
+    if(
+      row &&
+      row[name]!==undefined &&
+      row[name]!==null &&
+      row[name]!==""
+    ){
+
+      return row[name];
 
     }
 
-
-    updateCartCount();
-
-
-    /* ==========================================
-       PRODUCT HELPERS
-    ========================================== */
+  }
 
 
-    function getValue(row,names,defaultValue=""){
+  return defaultValue;
 
-      for(const name of names){
+}
 
-        if(
-          row &&
-          row[name] !== undefined &&
-          row[name] !== null &&
-          row[name] !== ""
-        ){
 
-          return row[name];
+function numberValue(
+  value,
+  defaultValue=0
+){
 
+  const n=Number(value);
+
+  return Number.isFinite(n)
+    ?n
+    :defaultValue;
+
+}
+
+
+function calculatePrimePrice(price){
+
+  return Math.round(
+    price*.90
+  );
+
+}
+
+
+function productFromRow(row){
+
+  return{
+
+    id:
+    getValue(
+      row,
+      ["id","product_id","uuid"],
+      crypto.randomUUID()
+    ),
+
+    name:
+    getValue(
+      row,
+      ["name","product_name","title"],
+      "منتج من Elora"
+    ),
+
+    description:
+    getValue(
+      row,
+      ["description","details"],
+      ""
+    ),
+
+    price:
+    numberValue(
+      getValue(
+        row,
+        [
+          "price",
+          "sale_price",
+          "selling_price"
+        ],
+        0
+      )
+    ),
+
+    oldPrice:
+    numberValue(
+      getValue(
+        row,
+        [
+          "old_price",
+          "original_price",
+          "before_price"
+        ],
+        0
+      )
+    ),
+
+    image:
+    getValue(
+      row,
+      [
+        "image_url",
+        "image",
+        "photo",
+        "product_image"
+      ],
+      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=700&q=85"
+    ),
+
+    discount:
+    numberValue(
+      getValue(
+        row,
+        [
+          "discount",
+          "discount_percent",
+          "discount_percentage"
+        ],
+        0
+      )
+    ),
+
+    featured:
+    getValue(
+      row,
+      [
+        "featured",
+        "is_featured",
+        "featured_product"
+      ],
+      true
+    )
+
+  };
+
+}
+
+
+/* ==================================================
+   ESCAPE HTML
+   ================================================== */
+
+function escapeHtml(value){
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+
+/* ==================================================
+   RENDER PRODUCT
+   ================================================== */
+
+function renderProduct(product){
+
+  const primePrice=
+  calculatePrimePrice(
+    product.price
+  );
+
+
+  const card=
+  document.createElement("article");
+
+
+  card.className="product";
+
+
+  let discountHTML="";
+
+
+  if(product.discount>0){
+
+    discountHTML=`
+
+      <span class="discount">
+
+        خصم ${product.discount}%
+
+      </span>
+
+    `;
+
+  }
+
+
+  let oldPriceHTML="";
+
+
+  if(
+    product.oldPrice>
+    product.price
+  ){
+
+    oldPriceHTML=`
+
+      <span class="old-price">
+
+        ${
+          product.oldPrice.toLocaleString(
+            "ar-EG"
+          )
         }
 
-      }
+        ج.م
 
-      return defaultValue;
+      </span>
+
+    `;
+
+  }
+
+
+  card.innerHTML=`
+
+    <div class="product-image">
+
+
+      <img
+
+        src="${escapeHtml(product.image)}"
+
+        alt="${escapeHtml(product.name)}"
+
+        loading="lazy"
+
+        onerror="
+          this.src='https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=700&q=85'
+        "
+
+      >
+
+
+      ${discountHTML}
+
+
+      <span class="prime-badge">
+
+        👑 Prime -10%
+
+      </span>
+
+
+      <button
+        class="favorite"
+        type="button"
+      >
+
+        ♡
+
+      </button>
+
+
+    </div>
+
+
+    <div class="product-info">
+
+
+      <h3>
+
+        ${escapeHtml(product.name)}
+
+      </h3>
+
+
+      <div class="price-row">
+
+
+        <span class="price">
+
+          ${
+            product.price.toLocaleString(
+              "ar-EG"
+            )
+          }
+
+          ج.م
+
+        </span>
+
+
+        ${oldPriceHTML}
+
+
+      </div>
+
+
+      <div class="prime-price">
+
+        👑 سعر Prime:
+
+        ${
+          primePrice.toLocaleString(
+            "ar-EG"
+          )
+        }
+
+        ج.م
+
+      </div>
+
+
+      <button
+        class="add-cart"
+        type="button"
+      >
+
+        أضيفي للسلة
+
+      </button>
+
+
+    </div>
+
+  `;
+
+
+  card
+  .querySelector(".add-cart")
+  .addEventListener(
+    "click",
+    ()=>{
+
+      addToCart(product);
 
     }
+  );
 
 
-    function numberValue(value,defaultValue=0){
+  card
+  .querySelector(".favorite")
+  .addEventListener(
+    "click",
+    function(){
 
-      const n =
-        Number(value);
-
-      return Number.isFinite(n)
-        ? n
-        : defaultValue;
+      this.textContent=
+      this.textContent==="♡"
+      ?"♥"
+      :"♡";
 
     }
+  );
 
 
-    function calculatePrimePrice(price){
+  return card;
 
-      return Math.round(
-        price * 0.90
+}
+
+
+/* ==================================================
+   LOAD PRODUCTS
+   ================================================== */
+
+async function loadProducts(){
+
+  const grid=
+  document.getElementById(
+    "productsGrid"
+  );
+
+
+  if(
+    typeof eloraSupabase===
+    "undefined"
+  ){
+
+    grid.innerHTML=`
+
+      <div class="empty-products">
+
+        تعذر الاتصال بقاعدة البيانات.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  try{
+
+    const result=
+    await eloraSupabase
+    .from("products")
+    .select("*");
+
+
+    if(result.error){
+
+      console.error(
+        result.error
       );
 
-    }
 
+      grid.innerHTML=`
 
-    function productFromRow(row){
+        <div class="empty-products">
 
-      const id =
-        getValue(
-          row,
-          ["id","product_id","uuid"],
-          crypto.randomUUID()
-        );
+          لم يتم العثور على منتجات حاليًا.
 
-      const name =
-        getValue(
-          row,
-          ["name","product_name","title"],
-          "منتج من Elora"
-        );
+          <br>
 
-      const description =
-        getValue(
-          row,
-          ["description","details"],
-          ""
-        );
-
-      const price =
-        numberValue(
-          getValue(
-            row,
-            [
-              "price",
-              "sale_price",
-              "selling_price"
-            ],
-            0
-          )
-        );
-
-      const oldPrice =
-        numberValue(
-          getValue(
-            row,
-            [
-              "old_price",
-              "original_price",
-              "before_price"
-            ],
-            0
-          )
-        );
-
-      const image =
-        getValue(
-          row,
-          [
-            "image_url",
-            "image",
-            "photo",
-            "product_image"
-          ],
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=700&q=85"
-        );
-
-      const discount =
-        numberValue(
-          getValue(
-            row,
-            [
-              "discount",
-              "discount_percent",
-              "discount_percentage"
-            ],
-            0
-          )
-        );
-
-      const featured =
-        getValue(
-          row,
-          [
-            "featured",
-            "is_featured",
-            "featured_product"
-          ],
-          true
-        );
-
-      return{
-
-        id,
-        name,
-        description,
-        price,
-        oldPrice,
-        image,
-        discount,
-        featured
-
-      };
-
-    }
-
-
-    /* ==========================================
-       RENDER PRODUCT
-    ========================================== */
-
-
-    function renderProduct(product){
-
-      const primePrice =
-        calculatePrimePrice(
-          product.price
-        );
-
-
-      const card =
-        document.createElement("article");
-
-      card.className =
-        "product";
-
-
-      let discountHTML = "";
-
-      if(product.discount > 0){
-
-        discountHTML = `
-          <span class="discount">
-            خصم ${product.discount}%
-          </span>
-        `;
-
-      }
-
-
-      let oldPriceHTML = "";
-
-      if(product.oldPrice > product.price){
-
-        oldPriceHTML = `
-          <span class="old-price">
-            ${product.oldPrice.toLocaleString("ar-EG")} ج.م
-          </span>
-        `;
-
-      }
-
-
-      card.innerHTML = `
-
-        <div class="product-image">
-
-          <img
-            src="${escapeHtml(product.image)}"
-            alt="${escapeHtml(product.name)}"
-            loading="lazy"
-            onerror="
-              this.src='https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=700&q=85'
-            "
-          >
-
-          ${discountHTML}
-
-          <span class="prime-badge">
-            👑 Prime -10%
-          </span>
-
-          <button
-            class="favorite"
-            type="button">
-            ♡
-          </button>
-
-        </div>
-
-        <div class="product-info">
-
-          <h3>
-            ${escapeHtml(product.name)}
-          </h3>
-
-          <div class="price-row">
-
-            <span class="price">
-              ${product.price.toLocaleString("ar-EG")} ج.م
-            </span>
-
-            ${oldPriceHTML}
-
-          </div>
-
-          <div class="prime-price">
-            👑 سعر Prime:
-            ${primePrice.toLocaleString("ar-EG")} ج.م
-          </div>
-
-          <button
-            class="add-cart"
-            type="button">
-            أضيفي للسلة
-          </button>
+          سيتم تحميل المنتجات من الداش بورد عند إضافتها.
 
         </div>
 
       `;
 
+      return;
 
-      const addButton =
-        card.querySelector(".add-cart");
+    }
 
 
-      addButton.addEventListener(
-        "click",
-        ()=>{
+    const rows=
+    result.data||[];
 
-          addToCart(product);
 
-        }
+    const products=
+    rows
+
+      .map(productFromRow)
+
+      .filter(
+        product=>
+        product.featured!==false
       );
 
 
-      const favoriteButton =
-        card.querySelector(".favorite");
+    grid.innerHTML="";
 
 
-      favoriteButton.addEventListener(
-        "click",
-        ()=>{
+    if(products.length===0){
 
-          favoriteButton.textContent =
-            favoriteButton.textContent === "♡"
-              ? "♥"
-              : "♡";
+      grid.innerHTML=`
 
-        }
-      );
+        <div class="empty-products">
 
+          لا توجد منتجات مميزة حاليًا.
 
-      return card;
+          <br>
 
-    }
+          أضيفي المنتجات من الداش بورد.
 
+        </div>
 
-    /* ==========================================
-       HTML SAFETY
-    ========================================== */
+      `;
 
-
-    function escapeHtml(value){
-
-      return String(value)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+      return;
 
     }
 
 
-    /* ==========================================
-       LOAD PRODUCTS
-    ========================================== */
+    products.forEach(
+      product=>{
 
-
-    async function loadProducts(){
-
-      const grid =
-        document.getElementById(
-          "productsGrid"
+        grid.appendChild(
+          renderProduct(product)
         );
-
-
-      if(
-        typeof eloraSupabase ===
-        "undefined"
-      ){
-
-        grid.innerHTML = `
-
-          <div class="empty-products">
-
-            تعذر الاتصال بقاعدة البيانات.
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      try{
-
-        const result =
-          await eloraSupabase
-            .from("products")
-            .select("*");
-
-
-        if(result.error){
-
-          console.error(
-            result.error
-          );
-
-          grid.innerHTML = `
-
-            <div class="empty-products">
-
-              لم يتم العثور على منتجات حاليًا.
-              <br>
-              سيتم تحميل المنتجات من الداش بورد عند إضافتها.
-
-            </div>
-
-          `;
-
-          return;
-
-        }
-
-
-        const rows =
-          result.data || [];
-
-
-        const products =
-          rows
-            .map(productFromRow)
-            .filter(
-              product =>
-                product.featured !== false
-            );
-
-
-        grid.innerHTML = "";
-
-
-        if(products.length === 0){
-
-          grid.innerHTML = `
-
-            <div class="empty-products">
-
-              لا توجد منتجات مميزة حاليًا.
-              <br>
-              أضيفي المنتجات من الداش بورد.
-
-            </div>
-
-          `;
-
-          return;
-
-        }
-
-
-        products.forEach(product=>{
-
-          grid.appendChild(
-            renderProduct(product)
-          );
-
-        });
-
-
-      }catch(error){
-
-        console.error(error);
-
-        grid.innerHTML = `
-
-          <div class="empty-products">
-
-            حدث خطأ أثناء تحميل المنتجات.
-
-          </div>
-
-        `;
-
-      }
-
-    }
-
-
-    /* ==========================================
-       LOGIN
-    ========================================== */
-
-
-    async function openLogin(){
-
-      if(
-        typeof eloraSupabase ===
-        "undefined"
-      ){
-
-        showMessage(
-          "الاتصال بقاعدة البيانات غير جاهز"
-        );
-
-        return;
-
-      }
-
-
-      try{
-
-        const {
-          data
-        } =
-          await eloraSupabase
-            .auth
-            .getSession();
-
-
-        if(data.session){
-
-          showMessage(
-            "أنت مسجل الدخول بالفعل 👑"
-          );
-
-        }else{
-
-          showMessage(
-            "صفحة تسجيل الدخول سيتم تفعيلها في الخطوة التالية"
-          );
-
-        }
-
-      }catch(error){
-
-        showMessage(
-          "تعذر فتح الحساب"
-        );
-
-      }
-
-    }
-
-
-    /* ==========================================
-       PRIME
-    ========================================== */
-
-
-    async function openPrime(){
-
-      try{
-
-        const {
-          data
-        } =
-          await eloraSupabase
-            .auth
-            .getSession();
-
-
-        if(!data.session){
-
-          showMessage(
-            "للاشتراك في Elora Prime يجب تسجيل الدخول أولًا 👑"
-          );
-
-          return;
-
-        }
-
-
-        showMessage(
-          "سيتم فتح دفع Prime في الخطوة التالية 👑"
-        );
-
-
-      }catch(error){
-
-        showMessage(
-          "تعذر فتح Prime حاليًا"
-        );
-
-      }
-
-    }
-
-
-    /* ==========================================
-       PRIME SESSION
-    ========================================== */
-
-
-    async function checkPrime(){
-
-      if(
-        typeof eloraSupabase ===
-        "undefined"
-      ){
-
-        return;
-
-      }
-
-
-      try{
-
-        const {
-          data
-        } =
-          await eloraSupabase
-            .auth
-            .getSession();
-
-
-        if(!data.session){
-
-          document.body
-            .classList
-            .remove("prime-active");
-
-          return;
-
-        }
-
-
-        /*
-          في المرحلة القادمة سنقرأ
-          جدول اشتراكات Prime من Supabase.
-
-          إذا كان الاشتراك فعالًا:
-          يتم تشغيل الثيم الموف.
-        */
-
-
-      }catch(error){
-
-        console.error(error);
-
-      }
-
-    }
-
-
-    /* ==========================================
-       SCROLL
-    ========================================== */
-
-
-    function scrollToProducts(){
-
-      document
-        .getElementById("products")
-        .scrollIntoView({
-          behavior:"smooth"
-        });
-
-    }
-
-
-    /* ==========================================
-       SUPABASE AUTH STATE
-    ========================================== */
-
-
-    if(
-      typeof eloraSupabase !==
-      "undefined"
-    ){
-
-      eloraSupabase
-        .auth
-        .onAuthStateChange(
-          (event,session)=>{
-
-            if(session){
-
-              checkPrime();
-
-            }else{
-
-              document.body
-                .classList
-                .remove("prime-active");
-
-            }
-
-          }
-        );
-
-    }
-
-
-    /* ==========================================
-       START
-    ========================================== */
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      ()=>{
-
-        loadProducts();
-
-        checkPrime();
 
       }
     );
 
-  </script>
+
+  }catch(error){
+
+    console.error(error);
+
+
+    grid.innerHTML=`
+
+      <div class="empty-products">
+
+        حدث خطأ أثناء تحميل المنتجات.
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* ==================================================
+   LOGIN
+   ================================================== */
+
+async function openLogin(){
+
+  if(
+    typeof eloraSupabase===
+    "undefined"
+  ){
+
+    showMessage(
+      "الاتصال بقاعدة البيانات غير جاهز"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const {data}=
+    await eloraSupabase
+    .auth
+    .getSession();
+
+
+    if(data.session){
+
+      showMessage(
+        "أنت مسجل الدخول بالفعل 👑"
+      );
+
+    }else{
+
+      showMessage(
+        "صفحة تسجيل الدخول سيتم تفعيلها في الخطوة التالية"
+      );
+
+    }
+
+
+  }catch(error){
+
+    showMessage(
+      "تعذر فتح الحساب"
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   PRIME
+   ================================================== */
+
+async function openPrime(){
+
+  try{
+
+    const {data}=
+    await eloraSupabase
+    .auth
+    .getSession();
+
+
+    if(!data.session){
+
+      showMessage(
+        "للاشتراك في Elora Prime يجب تسجيل الدخول أولًا 👑"
+      );
+
+      return;
+
+    }
+
+
+    showMessage(
+      "سيتم فتح دفع Prime في الخطوة التالية 👑"
+    );
+
+
+  }catch(error){
+
+    showMessage(
+      "تعذر فتح Prime حاليًا"
+    );
+
+  }
+
+}
+
+
+async function checkPrime(){
+
+  if(
+    typeof eloraSupabase===
+    "undefined"
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    const {data}=
+    await eloraSupabase
+    .auth
+    .getSession();
+
+
+    if(!data.session){
+
+      document.body
+      .classList
+      .remove(
+        "prime-active"
+      );
+
+    }
+
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* ==================================================
+   SCROLL
+   ================================================== */
+
+function scrollToProducts(){
+
+  document
+  .getElementById("products")
+  .scrollIntoView({
+
+    behavior:"smooth"
+
+  });
+
+}
+
+
+/* ==================================================
+   SUPABASE AUTH
+   ================================================== */
+
+if(
+  typeof eloraSupabase!=="undefined"
+){
+
+  eloraSupabase
+  .auth
+  .onAuthStateChange(
+    (event,session)=>{
+
+      if(session){
+
+        checkPrime();
+
+      }else{
+
+        document.body
+        .classList
+        .remove(
+          "prime-active"
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ==================================================
+   🔥 CATEGORIES
+   حركة مستمرة + سحب يدوي
+   بدون رجوع لنقطة البداية
+   ================================================== */
+
+const categoryWrapper=
+document.querySelector(
+  ".categories-wrapper"
+);
+
+const categoryTrack=
+document.getElementById(
+  "categories"
+);
+
+
+let isDragging=false;
+
+let startX=0;
+
+let lastX=0;
+
+let positionX=0;
+
+
+/*
+  سرعة الحركة التلقائية.
+  كلما زادت الرقم زادت السرعة.
+*/
+
+const autoSpeed=0.65;
+
+
+/*
+  حساب عرض المجموعة الأولى.
+  لأننا مكررين نفس الأقسام مرتين.
+*/
+
+function getLoopWidth(){
+
+  const items=
+  categoryTrack.querySelectorAll(
+    ".category"
+  );
+
+
+  if(items.length<2){
+
+    return 0;
+
+  }
+
+
+  const half=
+  Math.floor(
+    items.length/2
+  );
+
+
+  const firstItem=
+  items[0];
+
+
+  const secondGroupFirst=
+  items[half];
+
+
+  if(!secondGroupFirst){
+
+    return (
+      categoryTrack.scrollWidth/2
+    );
+
+  }
+
+
+  return (
+    secondGroupFirst.offsetLeft-
+    firstItem.offsetLeft
+  );
+
+}
+
+
+/*
+  نحافظ على الشريط داخل
+  حدود اللوب بدون قفزة.
+*/
+
+function normalizePosition(){
+
+  const loopWidth=
+  getLoopWidth();
+
+
+  if(!loopWidth){
+
+    return;
+
+  }
+
+
+  while(
+    positionX<=-loopWidth
+  ){
+
+    positionX+=loopWidth;
+
+  }
+
+
+  while(
+    positionX>=0
+  ){
+
+    positionX-=loopWidth;
+
+  }
+
+}
+
+
+/*
+  تحديث مكان الشريط.
+*/
+
+function applyPosition(){
+
+  normalizePosition();
+
+
+  categoryTrack.style.transform=
+  `translate3d(
+    ${positionX}px,
+    0,
+    0
+  )`;
+
+}
+
+
+/*
+  بداية السحب.
+*/
+
+function startCategoryDrag(
+  clientX
+){
+
+  isDragging=true;
+
+  startX=clientX;
+
+  lastX=clientX;
+
+}
+
+
+/*
+  أثناء السحب.
+*/
+
+function moveCategoryDrag(
+  clientX,
+  event
+){
+
+  if(!isDragging){
+
+    return;
+
+  }
+
+
+  const difference=
+  clientX-lastX;
+
+
+  /*
+    هنا الحركة مباشرة مع الإصبع.
+  */
+
+  positionX+=difference;
+
+
+  lastX=clientX;
+
+
+  applyPosition();
+
+
+  if(
+    event &&
+    event.cancelable
+  ){
+
+    event.preventDefault();
+
+  }
+
+}
+
+
+/*
+  نهاية السحب.
+  لا نرجع لأي نقطة.
+*/
+
+function endCategoryDrag(){
+
+  if(!isDragging){
+
+    return;
+
+  }
+
+
+  isDragging=false;
+
+
+  /*
+    مهم:
+    لا نعيد تشغيل Animation.
+    الحركة التلقائية ستكمل من نفس المكان.
+  */
+
+  applyPosition();
+
+}
+
+
+/* ==================================================
+   MOUSE DRAG
+   ================================================== */
+
+categoryWrapper.addEventListener(
+  "mousedown",
+  function(e){
+
+    e.preventDefault();
+
+    startCategoryDrag(
+      e.clientX
+    );
+
+  }
+);
+
+
+window.addEventListener(
+  "mousemove",
+  function(e){
+
+    if(isDragging){
+
+      moveCategoryDrag(
+        e.clientX,
+        e
+      );
+
+    }
+
+  }
+);
+
+
+window.addEventListener(
+  "mouseup",
+  function(){
+
+    endCategoryDrag();
+
+  }
+);
+
+
+/* ==================================================
+   TOUCH DRAG
+   ================================================== */
+
+categoryWrapper.addEventListener(
+  "touchstart",
+  function(e){
+
+    if(
+      e.touches.length!==1
+    ){
+
+      return;
+
+    }
+
+
+    startCategoryDrag(
+      e.touches[0].clientX
+    );
+
+  },
+  {
+    passive:false
+  }
+);
+
+
+categoryWrapper.addEventListener(
+  "touchmove",
+  function(e){
+
+    if(
+      !isDragging ||
+      e.touches.length!==1
+    ){
+
+      return;
+
+    }
+
+
+    moveCategoryDrag(
+      e.touches[0].clientX,
+      e
+    );
+
+  },
+  {
+    passive:false
+  }
+);
+
+
+categoryWrapper.addEventListener(
+  "touchend",
+  function(){
+
+    endCategoryDrag();
+
+  },
+  {
+    passive:true
+  }
+);
+
+
+categoryWrapper.addEventListener(
+  "touchcancel",
+  function(){
+
+    endCategoryDrag();
+
+  },
+  {
+    passive:true
+  }
+);
+
+
+/* ==================================================
+   AUTO LOOP
+   ================================================== */
+
+function animateCategories(){
+
+  /*
+    لو المستخدم مش بيسحب:
+    الحركة مستمرة.
+  */
+
+  if(!isDragging){
+
+    positionX-=autoSpeed;
+
+    applyPosition();
+
+  }
+
+
+  requestAnimationFrame(
+    animateCategories
+  );
+
+}
+
+
+/*
+  نبدأ من المكان الطبيعي.
+*/
+
+positionX=0;
+
+applyPosition();
+
+
+/*
+  تشغيل الحركة.
+*/
+
+requestAnimationFrame(
+  animateCategories
+);
+
+
+/* ==================================================
+   START APP
+   ================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
+
+    loadProducts();
+
+    checkPrime();
+
+  }
+);
+
+</script>
 
 </body>
+
   </html>
