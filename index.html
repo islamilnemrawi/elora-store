@@ -1,0 +1,2703 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7d9e5">
+  <meta name="description" content="Elora - متجر أنيق للإكسسوارات والساعات والشنط والمكياج واللانجري">
+
+  <title>Elora | Jewelry & Accessories</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  <style>
+/* ===== FINAL HERO: ACTIVE DOT BECOMES THE BUTTON BUBBLE ===== */
+.hero-slider{position:relative!important;overflow:hidden!important}
+.hero-dots{
+ position:absolute!important;left:50%!important;right:auto!important;bottom:22px!important;top:auto!important;
+ transform:translateX(-50%)!important;z-index:50!important;display:flex!important;align-items:center!important;
+ justify-content:center!important;gap:9px!important;width:max-content!important;max-width:calc(100% - 24px)!important;
+ margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;direction:ltr!important;
+}
+.hero-dot{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:9px!important;height:9px!important;min-width:9px!important;min-height:9px!important;flex:0 0 9px!important;
+ padding:0!important;border:0!important;border-radius:999px!important;
+ background:var(--pink)!important;color:transparent!important;overflow:hidden!important;
+ white-space:nowrap!important;cursor:pointer!important;opacity:.72!important;
+ transition:all .38s cubic-bezier(.22,.61,.36,1)!important;
+}
+.hero-dot.active{
+ width:154px!important;height:40px!important;min-width:154px!important;min-height:40px!important;flex:0 0 154px!important;
+ padding:0 18px!important;border-radius:999px!important;background:var(--pink)!important;color:#fff!important;
+ opacity:1!important;box-shadow:0 8px 22px rgba(217,107,145,.25)!important;
+ font-family:"Cairo",sans-serif!important;font-size:13px!important;font-weight:700!important;
+}
+.hero-dot.active::after{content:attr(data-label)!important;color:#fff!important;display:block!important}
+.hero-bottom-btn{display:none!important}
+.hero-slide .hero-btn{display:none!important}
+@media(max-width:700px){
+ .hero-dots{bottom:20px!important;gap:8px!important}
+ .hero-dot{width:8px!important;height:8px!important;min-width:8px!important;min-height:8px!important;flex-basis:8px!important}
+ .hero-dot.active{width:138px!important;min-width:138px!important;flex-basis:138px!important;height:37px!important;min-height:37px!important;font-size:12px!important}
+}
+</style>
+</head>
+
+<body>
+
+  <!-- =========================================================
+       TOP ANNOUNCEMENT
+       ========================================================= -->
+
+  <div class="announcement">
+    <div class="announcement-track">
+      <div class="announcement-item">
+        <i class="fa-solid fa-sparkles"></i>
+        <span>أهلاً بكِ في Elora</span>
+      </div>
+
+      <div class="announcement-item">
+        <i class="fa-solid fa-truck-fast"></i>
+        <span>اختاري منتجاتك واستمتعي بتجربة تسوق مميزة</span>
+      </div>
+
+      <div class="announcement-item">
+        <i class="fa-solid fa-crown"></i>
+        <span>اكتشفي عالم Elora Prime</span>
+      </div>
+
+      <div class="announcement-item">
+        <i class="fa-solid fa-sparkles"></i>
+        <span>أهلاً بكِ في Elora</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       HEADER
+       ========================================================= -->
+
+  <header class="header">
+
+    <div class="header-main">
+
+      <!-- Right -->
+      <div class="header-side right">
+
+        <button class="icon-btn" onclick="openAccount()" aria-label="الحساب">
+          <i class="fa-regular fa-user"></i>
+        </button>
+
+        <button class="icon-btn" onclick="openCart()" aria-label="السلة">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+
+        <button class="icon-btn" onclick="toggleMenu()" aria-label="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+      </div>
+
+      <!-- Logo -->
+      <a href="#" class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">
+        <div class="logo-main">Elora</div>
+        <div class="logo-sub">JEWELRY & ACCESSORIES</div>
+      </a>
+
+      <!-- Left -->
+      <div class="header-side left">
+
+        <button class="prime-button" onclick="openPrime()">
+          <i class="fa-solid fa-crown"></i>
+          <span id="primeButtonText">Elora Prime</span>
+        </button>
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="ابحثي عن منتج..."
+            oninput="handleSearch(this.value)"
+          >
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav">
+      <div class="nav-inner">
+
+        <a class="nav-link" href="#home">الرئيسية</a>
+        <a class="nav-link" href="#categoriesSection">الأقسام</a>
+        <a class="nav-link" href="#featured">الأكثر طلباً</a>
+        <a class="nav-link" href="#offers">العروض</a>
+        <a class="nav-link" href="#prime">Elora Prime</a>
+        <a class="nav-link" href="#contact">تواصل معنا</a>
+
+      </div>
+    </nav>
+
+  </header>
+
+  <!-- =========================================================
+       MAIN
+       ========================================================= -->
+
+  <main id="home">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <div class="hero-slider" id="heroSlider">
+
+        <div class="hero-slide active">
+
+          <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1800&q=85"
+            alt="Elora Jewelry"
+          >
+
+          <div class="hero-overlay"></div>
+
+          <div class="hero-content">
+
+            <div class="hero-small">NEW COLLECTION</div>
+
+            <h1 class="hero-title">
+              Discover<br>
+              <span>Elora</span>
+            </h1>
+
+            <p class="hero-text">
+              تفاصيل صغيرة تصنع إطلالة مختلفة.
+              اكتشفي تشكيلتنا المختارة من القطع الأنيقة
+              والإكسسوارات المميزة.
+            </p>
+
+            <button class="hero-btn" onclick="scrollToSection('featured')">
+              اكتشفي المجموعة
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="hero-slide">
+
+          <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1800&q=85"
+            alt="Elora Watches"
+          >
+
+          <div class="hero-overlay"></div>
+
+          <div class="hero-content">
+
+            <div class="hero-small">TIMELESS STYLE</div>
+
+            <h1 class="hero-title">
+              Your<br>
+              <span>Style</span>
+            </h1>
+
+            <p class="hero-text">
+              اختاري ساعتك بعناية وأضيفي لمستك الخاصة
+              إلى كل إطلالة.
+            </p>
+
+            <button class="hero-btn" onclick="filterCategory('ساعات حريمي')">
+              تسوقي الساعات
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="hero-slide">
+
+          <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1800&q=85"
+            alt="Elora Bags"
+          >
+
+          <div class="hero-overlay"></div>
+
+          <div class="hero-content">
+
+            <div class="hero-small">ELORA COLLECTION</div>
+
+            <h1 class="hero-title">
+              Luxury<br>
+              <span>Everyday</span>
+            </h1>
+
+            <p class="hero-text">
+              شنط وإكسسوارات تضيف لمسة فاخرة
+              إلى يومك.
+            </p>
+
+            <button class="hero-btn" onclick="filterCategory('شنط حريمي')">
+              اكتشفي الشنط
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+      <!-- HERO DOTS + BUTTON: INSIDE THE MOVING IMAGE -->
+      <div class="hero-dots" id="heroDots">
+        <button class="hero-dot active" data-label="اكتشفي المجموعة" aria-label="الشريحة الأولى"></button>
+        <button class="hero-dot" data-label="تسوقي الساعات" aria-label="الشريحة الثانية"></button>
+        <button class="hero-dot" data-label="اكتشفي الشنط" aria-label="الشريحة الثالثة"></button>
+      </div>
+
+      <button class="hero-bottom-btn" id="heroBottomBtn" type="button">
+        اكتشفي المجموعة
+      </button>
+      </div>
+
+
+    </section>
+
+    <!-- =====================================================
+         CATEGORIES
+         ===================================================== -->
+
+    <section class="section" id="categoriesSection">
+
+      <div class="section-head">
+
+        <div class="section-title-wrap">
+          <div class="section-kicker">EXPLORE</div>
+          <h2 class="section-title">تسوقي حسب القسم</h2>
+          <p class="section-sub">اختاري القسم المفضل لديكِ</p>
+        </div>
+
+        <a class="view-all" href="#featured">عرض المنتجات</a>
+
+      </div>
+
+      <div class="categories-wrapper" id="categoryWrapper">
+
+        <div class="categories" id="categories">
+
+          <!-- SET 1 -->
+          <div class="category-set" id="categorySet">
+
+            <div class="category-card" data-category="لانجري">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=600&q=80" alt="لانجري">
+              </div>
+              <div class="category-name">لانجري</div>
+              <div class="category-count">اكتشفي المجموعة</div>
+            </div>
+
+            <div class="category-card" data-category="اكسسوارات">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=600&q=80" alt="اكسسوارات">
+              </div>
+              <div class="category-name">اكسسوارات</div>
+              <div class="category-count">قطع مميزة</div>
+            </div>
+
+            <div class="category-card" data-category="ساعات حريمي">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=600&q=80" alt="ساعات حريمي">
+              </div>
+              <div class="category-name">ساعات حريمي</div>
+              <div class="category-count">ستايلك في كل وقت</div>
+            </div>
+
+            <div class="category-card" data-category="ساعات رجالي">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=600&q=80" alt="ساعات رجالي">
+              </div>
+              <div class="category-name">ساعات رجالي</div>
+              <div class="category-count">أناقة الرجل</div>
+            </div>
+
+            <div class="category-card" data-category="شنط حريمي">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=600&q=80" alt="شنط حريمي">
+              </div>
+              <div class="category-name">شنط حريمي</div>
+              <div class="category-count">اختاري حقيبتك</div>
+            </div>
+
+            <div class="category-card" data-category="شنط مدارس">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80" alt="شنط مدارس">
+              </div>
+              <div class="category-name">شنط مدارس</div>
+              <div class="category-count">عملية وأنيقة</div>
+            </div>
+
+            <div class="category-card" data-category="مكياج">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80" alt="مكياج">
+              </div>
+              <div class="category-name">مكياج</div>
+              <div class="category-count">جمالك يبدأ هنا</div>
+            </div>
+
+          </div>
+
+          <!-- SET 2 -->
+          <div class="category-set" aria-hidden="true">
+
+            <div class="category-card" data-category="لانجري">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=600&q=80" alt="">
+              </div>
+              <div class="category-name">لانجري</div>
+              <div class="category-count">اكتشفي المجموعة</div>
+            </div>
+
+            <div class="category-card" data-category="اكسسوارات">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=600&q=80" alt="">
+              </div>
+              <div class="category-name">اكسسوارات</div>
+              <div class="category-count">قطع مميزة</div>
+            </div>
+
+            <div class="category-card" data-category="ساعات حريمي">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=600&q=80" alt="">
+              </div>
+              <div class="category-name">ساعات حريمي</div>
+              <div class="category-count">ستايلك في كل وقت</div>
+            </div>
+
+            <div class="category-card" data-category="ساعات رجالي">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=600&q=80" alt="">
+              </div>
+              <div class="category-name">ساعات رجالي</div>
+              <div class="category-count">أناقة الرجل</div>
+            </div>
+
+            <div class="category-card" data-category="شنط حريمي">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=600&q=80" alt="">
+              </div>
+              <div class="category-name">شنط حريمي</div>
+              <div class="category-count">اختاري حقيبتك</div>
+            </div>
+
+            <div class="category-card" data-category="شنط مدارس">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80" alt="">
+              </div>
+              <div class="category-name">شنط مدارس</div>
+              <div class="category-count">عملية وأنيقة</div>
+            </div>
+
+            <div class="category-card" data-category="مكياج">
+              <div class="category-image">
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80" alt="">
+              </div>
+              <div class="category-name">مكياج</div>
+              <div class="category-count">جمالك يبدأ هنا</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         FEATURED PRODUCTS
+         ===================================================== -->
+
+    <section class="section" id="featured">
+
+      <div class="section-head">
+
+        <div class="section-title-wrap">
+          <div class="section-kicker">ELORA PICKS</div>
+          <h2 class="section-title">منتجات مميزة</h2>
+          <p class="section-sub">اختيارات Elora لكِ</p>
+        </div>
+
+        <a class="view-all" href="#featured">كل المنتجات</a>
+
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+
+        <div class="loading">
+          <div class="spinner"></div>
+          جاري تحميل المنتجات...
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         PROMOTIONS
+         ===================================================== -->
+
+    <section class="section" id="offers">
+
+      <div class="section-head">
+
+        <div class="section-title-wrap">
+          <div class="section-kicker">ELORA OFFERS</div>
+          <h2 class="section-title">اختاري إطلالتك</h2>
+          <p class="section-sub">تشكيلات مختارة بعناية</p>
+        </div>
+
+      </div>
+
+      <div class="promo-grid">
+
+        <div class="promo-card">
+
+          <img
+            src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=85"
+            alt="Makeup"
+          >
+
+          <div class="promo-overlay"></div>
+
+          <div class="promo-content">
+
+            <small>BEAUTY</small>
+
+            <h3>Beauty<br>Collection</h3>
+
+            <p>
+              اكتشفي اختيارات المكياج التي تكمل جمالك.
+            </p>
+
+            <a class="promo-link" href="#featured" onclick="filterCategory('مكياج')">
+              اكتشفي الآن ←
+            </a>
+
+          </div>
+
+        </div>
+
+        <div class="promo-card">
+
+          <img
+            src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1000&q=85"
+            alt="Watches"
+          >
+
+          <div class="promo-overlay"></div>
+
+          <div class="promo-content">
+
+            <small>TIMELESS</small>
+
+            <h3>Watch<br>Collection</h3>
+
+            <p>
+              ساعة مميزة تكمل تفاصيل إطلالتك.
+            </p>
+
+            <a class="promo-link" href="#featured" onclick="filterCategory('ساعات حريمي')">
+              اكتشفي الآن ←
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         PRIME
+         ===================================================== -->
+
+    <section class="prime-section" id="prime">
+
+      <div class="prime-box">
+
+        <div class="prime-content">
+
+          <div class="prime-label">ELORA PREMIUM EXPERIENCE</div>
+
+          <h2 class="prime-title">Elora Prime</h2>
+
+          <p class="prime-desc">
+            تجربة مختلفة صُممت لمن تحب التفاصيل الفاخرة.
+            خصم إضافي، شحن مجاني، تغليف خاص وثيم مميز.
+          </p>
+
+          <div class="prime-benefits">
+
+            <div class="prime-benefit">
+              <i class="fa-solid fa-percent"></i>
+              خصم إضافي 10%
+            </div>
+
+            <div class="prime-benefit">
+              <i class="fa-solid fa-truck"></i>
+              شحن مجاني حتى 5 طلبات
+            </div>
+
+            <div class="prime-benefit">
+              <i class="fa-solid fa-gift"></i>
+              تغليف خاص
+            </div>
+
+            <div class="prime-benefit">
+              <i class="fa-solid fa-palette"></i>
+              مظهر Prime مميز
+            </div>
+
+          </div>
+
+          <button class="prime-activate" onclick="openPrime()">
+            <i class="fa-solid fa-crown"></i>
+            اكتشفي Elora Prime
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         FEATURES
+         ===================================================== -->
+
+    <section class="features">
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+
+        <div>
+          <h4>شحن سريع</h4>
+          <p>توصيل حسب محافظتك ومركزك</p>
+        </div>
+
+      </div>
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          <i class="fa-solid fa-shield-heart"></i>
+        </div>
+
+        <div>
+          <h4>تجربة آمنة</h4>
+          <p>تجربة تسوق بسيطة ومريحة</p>
+        </div>
+
+      </div>
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          <i class="fa-solid fa-headset"></i>
+        </div>
+
+        <div>
+          <h4>خدمة العملاء</h4>
+          <p>نحن هنا لمساعدتك</p>
+        </div>
+
+      </div>
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          <i class="fa-solid fa-gift"></i>
+        </div>
+
+        <div>
+          <h4>تغليف مميز</h4>
+          <p>تفاصيل تليق بكِ</p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         INSTAGRAM
+         ===================================================== -->
+
+    <section class="section" id="contact">
+
+      <div class="section-head">
+
+        <div class="section-title-wrap">
+          <div class="section-kicker">FOLLOW ELORA</div>
+          <h2 class="section-title">من عالم Elora</h2>
+          <p class="section-sub">تابعينا واكتشفي الجديد</p>
+        </div>
+
+      </div>
+
+      <div class="instagram-grid">
+
+        <div class="instagram-item">
+          <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=500&q=80" alt="">
+        </div>
+
+        <div class="instagram-item">
+          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=500&q=80" alt="">
+        </div>
+
+        <div class="instagram-item">
+          <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=80" alt="">
+        </div>
+
+        <div class="instagram-item">
+          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=500&q=80" alt="">
+        </div>
+
+        <div class="instagram-item">
+          <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=500&q=80" alt="">
+        </div>
+
+        <div class="instagram-item">
+          <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=80" alt="">
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =====================================================
+         NEWSLETTER
+         ===================================================== -->
+
+    <section class="newsletter">
+
+      <div class="section-kicker">STAY CONNECTED</div>
+
+      <h2>Join Elora</h2>
+
+      <p>
+        اشتركي ليصلك كل جديد من Elora والعروض الخاصة.
+      </p>
+
+      <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+
+        <input
+          type="email"
+          id="newsletterEmail"
+          placeholder="البريد الإلكتروني"
+          required
+        >
+
+        <button type="submit">
+          اشتراك
+        </button>
+
+      </form>
+
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+
+  <footer class="footer">
+
+    <div class="footer-grid">
+
+      <div>
+
+        <div class="footer-logo">Elora</div>
+
+        <p class="footer-about">
+          متجر Elora صُمم ليجمع لكِ الاختيارات
+          الأنيقة في تجربة تسوق بسيطة ومميزة.
+        </p>
+
+        <div class="socials">
+
+          <a class="social" href="#" aria-label="Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+
+          <a class="social" href="#" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+
+          <a class="social" href="#" aria-label="WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+
+          <a class="social" href="#" aria-label="Telegram">
+            <i class="fa-brands fa-telegram"></i>
+          </a>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <h4>Elora</h4>
+
+        <div class="footer-links">
+          <a href="#home">الرئيسية</a>
+          <a href="#categoriesSection">الأقسام</a>
+          <a href="#featured">المنتجات</a>
+          <a href="#offers">العروض</a>
+          <a href="#prime">Elora Prime</a>
+        </div>
+
+      </div>
+
+      <div>
+
+        <h4>خدمة العملاء</h4>
+
+        <div class="footer-links">
+          <a href="#">تواصل معنا</a>
+          <a href="#">سياسة الشحن</a>
+          <a href="#">سياسة الخصوصية</a>
+          <a href="#">الشروط والأحكام</a>
+        </div>
+
+      </div>
+
+      <div>
+
+        <h4>طرق الدفع</h4>
+
+        <div class="footer-links">
+          <a href="#">Visa / Mastercard</a>
+          <a href="#">Vodafone Cash</a>
+          <a href="#">InstaPay</a>
+          <a href="#">الدفع عند الاستلام</a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="copyright">
+      © 2026 Elora. جميع الحقوق محفوظة.
+    </div>
+
+  </footer>
+
+  <!-- =========================================================
+       CART MODAL
+       ========================================================= -->
+
+  <div class="modal" id="cartModal" onclick="closeModalOutside(event,'cartModal')">
+
+    <div class="modal-box">
+
+      <button class="close-modal" onclick="closeModal('cartModal')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 class="modal-title">سلة المشتريات</h2>
+
+      <p class="modal-subtitle">
+        راجعي المنتجات قبل إتمام الطلب
+      </p>
+
+      <div class="cart-items" id="cartItems"></div>
+
+      <div class="cart-summary" id="cartSummary" style="display:none">
+
+        <div class="summary-row">
+          <span>عدد المنتجات</span>
+          <strong id="summaryQty">0</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>الإجمالي</span>
+          <strong id="summarySubtotal">0 ج.م</strong>
+        </div>
+
+        <div class="summary-row total">
+          <span>الإجمالي قبل الشحن</span>
+          <strong id="summaryTotal">0 ج.م</strong>
+        </div>
+
+        <button class="checkout-btn" onclick="openCheckout()">
+          متابعة الطلب
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================================================
+       CHECKOUT MODAL
+       ========================================================= -->
+
+  <div class="modal" id="checkoutModal" onclick="closeModalOutside(event,'checkoutModal')">
+
+    <div class="modal-box">
+
+      <button class="close-modal" onclick="closeModal('checkoutModal')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 class="modal-title">إتمام الطلب</h2>
+
+      <p class="modal-subtitle">
+        اكتبي بيانات التوصيل
+      </p>
+
+      <div class="checkout-note">
+        لا تحتاجين إلى إنشاء حساب لإتمام الطلب.
+        اختاري المحافظة والمركز وسيتم حساب الشحن حسب الأسعار المحددة من المتجر.
+      </div>
+
+      <form id="checkoutForm" onsubmit="submitOrder(event)">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>الاسم بالكامل</label>
+            <input id="customerName" type="text" required placeholder="الاسم">
+          </div>
+
+          <div class="form-group">
+            <label>رقم الهاتف</label>
+            <input id="customerPhone" type="tel" required placeholder="01xxxxxxxxx">
+          </div>
+
+          <div class="form-group">
+            <label>المحافظة</label>
+            <select id="governorate" required onchange="loadCenters()">
+              <option value="">اختاري المحافظة</option>
+              <option value="القاهرة">القاهرة</option>
+              <option value="الجيزة">الجيزة</option>
+              <option value="الإسكندرية">الإسكندرية</option>
+              <option value="القليوبية">القليوبية</option>
+              <option value="الدقهلية">الدقهلية</option>
+              <option value="الشرقية">الشرقية</option>
+              <option value="الغربية">الغربية</option>
+              <option value="المنوفية">المنوفية</option>
+              <option value="البحيرة">البحيرة</option>
+              <option value="كفر الشيخ">كفر الشيخ</option>
+              <option value="دمياط">دمياط</option>
+              <option value="بورسعيد">بورسعيد</option>
+              <option value="الإسماعيلية">الإسماعيلية</option>
+              <option value="السويس">السويس</option>
+              <option value="الفيوم">الفيوم</option>
+              <option value="بني سويف">بني سويف</option>
+              <option value="المنيا">المنيا</option>
+              <option value="أسيوط">أسيوط</option>
+              <option value="سوهاج">سوهاج</option>
+              <option value="قنا">قنا</option>
+              <option value="الأقصر">الأقصر</option>
+              <option value="أسوان">أسوان</option>
+              <option value="مطروح">مطروح</option>
+              <option value="الوادي الجديد">الوادي الجديد</option>
+              <option value="شمال سيناء">شمال سيناء</option>
+              <option value="جنوب سيناء">جنوب سيناء</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>المركز / المنطقة</label>
+            <select id="center" required>
+              <option value="">اختاري المحافظة أولاً</option>
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label>العنوان بالتفصيل</label>
+            <textarea id="customerAddress" required placeholder="الشارع، رقم العمارة، الدور، الشقة..."></textarea>
+          </div>
+
+          <div class="form-group full">
+            <label>ملاحظات الطلب</label>
+            <textarea id="orderNotes" placeholder="أي ملاحظات إضافية..."></textarea>
+          </div>
+
+        </div>
+
+        <div class="checkout-note">
+          طريقة الدفع الحالية: الدفع عند الاستلام.
+          سيتم إضافة الدفع الإلكتروني بعد ربط بوابة الدفع.
+        </div>
+
+        <button class="checkout-btn" type="submit">
+          تأكيد الطلب
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <!-- =========================================================
+       PRIME MODAL
+       ========================================================= -->
+
+  <div class="modal" id="primeModal" onclick="closeModalOutside(event,'primeModal')">
+
+    <div class="modal-box prime-modal">
+
+      <button class="close-modal" onclick="closeModal('primeModal')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="prime-crown">
+        <i class="fa-solid fa-crown"></i>
+      </div>
+
+      <h2 class="modal-title">Elora Prime</h2>
+
+      <p class="modal-subtitle">
+        تجربة Elora الفاخرة
+      </p>
+
+      <div class="prime-price">
+        300 <small>ج.م / شهر</small>
+      </div>
+
+      <div class="prime-modal-list">
+
+        <div>
+          <i class="fa-solid fa-percent"></i>
+          خصم إضافي 10% فوق خصم المنتج
+        </div>
+
+        <div>
+          <i class="fa-solid fa-truck-fast"></i>
+          شحن مجاني حتى 5 طلبات شهرياً
+        </div>
+
+        <div>
+          <i class="fa-solid fa-gift"></i>
+          تغليف خاص لطلبات Prime
+        </div>
+
+        <div>
+          <i class="fa-solid fa-palette"></i>
+          ثيم موف/بنفسجي خاص أثناء الاشتراك
+        </div>
+
+      </div>
+
+      <button class="checkout-btn" onclick="activatePrimeDemo()">
+        <i class="fa-solid fa-crown"></i>
+        تفعيل تجربة Prime
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================================================
+       ACCOUNT MODAL
+       ========================================================= -->
+
+  <div class="modal" id="accountModal" onclick="closeModalOutside(event,'accountModal')">
+
+    <div class="modal-box">
+
+      <button class="close-modal" onclick="closeModal('accountModal')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 class="modal-title">حساب Elora</h2>
+
+      <p class="modal-subtitle">
+        تسجيل الدخول مطلوب للاشتراك في Elora Prime.
+      </p>
+
+      <div style="display:grid;gap:10px">
+
+        <button
+          class="checkout-btn"
+          style="background:#222"
+          onclick="showToast('سيتم ربط تسجيل الدخول بـ Google في الخطوة القادمة')"
+        >
+          <i class="fa-brands fa-google"></i>
+          تسجيل الدخول باستخدام Google
+        </button>
+
+        <button
+          class="checkout-btn"
+          style="background:#1877f2"
+          onclick="showToast('سيتم ربط تسجيل الدخول بـ Facebook في الخطوة القادمة')"
+        >
+          <i class="fa-brands fa-facebook-f"></i>
+          تسجيل الدخول باستخدام Facebook
+        </button>
+
+        <button
+          class="checkout-btn"
+          style="background:var(--pink)"
+          onclick="showToast('سيتم تفعيل التسجيل اليدوي مع Supabase')"
+        >
+          <i class="fa-solid fa-envelope"></i>
+          التسجيل بالبريد الإلكتروني
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================================================
+       TOAST
+       ========================================================= -->
+
+  <div class="toast" id="toast"></div>
+
+  <!-- =========================================================
+       JAVASCRIPT
+       ========================================================= -->
+
+  <script>
+    /* =========================================================
+       ELORA APP
+       ========================================================= */
+
+    let products = [];
+    let filteredProducts = [];
+    let cart = [];
+
+    const PRIME_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
+
+    function getPrimeExpiry() {
+      const value = Number(localStorage.getItem("elora_prime_expires") || 0);
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    function isPrimeCurrentlyActive() {
+      const expiry = getPrimeExpiry();
+      return expiry > Date.now();
+    }
+
+    let primeActive = isPrimeCurrentlyActive();
+
+    let heroIndex = 0;
+    let heroTimer = null;
+
+    const demoProducts = [
+      {
+        id: "demo-1",
+        name: "سوار أنيق",
+        price: 299,
+        oldPrice: 399,
+        image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=700&q=85",
+        category: "اكسسوارات",
+        discount: 25,
+        featured: true
+      },
+      {
+        id: "demo-2",
+        name: "ساعة نسائية فاخرة",
+        price: 850,
+        oldPrice: 1100,
+        image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=700&q=85",
+        category: "ساعات حريمي",
+        discount: 23,
+        featured: true
+      },
+      {
+        id: "demo-3",
+        name: "حقيبة أنيقة",
+        price: 690,
+        oldPrice: 850,
+        image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=700&q=85",
+        category: "شنط حريمي",
+        discount: 19,
+        featured: true
+      },
+      {
+        id: "demo-4",
+        name: "مجموعة مكياج",
+        price: 450,
+        oldPrice: 550,
+        image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=700&q=85",
+        category: "مكياج",
+        discount: 18,
+        featured: true
+      },
+      {
+        id: "demo-5",
+        name: "ساعة رجالي",
+        price: 990,
+        oldPrice: 1250,
+        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=700&q=85",
+        category: "ساعات رجالي",
+        discount: 21,
+        featured: true
+      },
+      {
+        id: "demo-6",
+        name: "حقيبة مدرسية",
+        price: 550,
+        oldPrice: 650,
+        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85",
+        category: "شنط مدارس",
+        discount: 15,
+        featured: true
+      }
+    ];
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+
+    function formatPrice(value) {
+      return Number(value || 0).toLocaleString("ar-EG") + " ج.م";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function normalizeProduct(row, index) {
+
+      const price =
+        Number(
+          row.price ??
+          row.sale_price ??
+          row.salePrice ??
+          row.selling_price ??
+          0
+        ) || 0;
+
+      const oldPrice =
+        Number(
+          row.oldPrice ??
+          row.old_price ??
+          row.compare_price ??
+          row.original_price ??
+          0
+        ) || 0;
+
+      let image =
+        row.image ??
+        row.image_url ??
+        row.imageUrl ??
+        row.photo ??
+        row.thumbnail ??
+        "";
+
+      if (Array.isArray(row.images) && row.images.length) {
+        image = row.images[0];
+      }
+
+      return {
+        id: row.id ?? ("product-" + index),
+        name:
+          row.name ??
+          row.title ??
+          row.product_name ??
+          "منتج Elora",
+
+        price,
+
+        oldPrice,
+
+        image:
+          image ||
+          "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=700&q=85",
+
+        category:
+          row.category ??
+          row.section ??
+          row.category_name ??
+          "اكسسوارات",
+
+        discount:
+          Number(
+            row.discount ??
+            row.discount_percent ??
+            0
+          ) || 0,
+
+        featured:
+          Boolean(
+            row.featured ??
+            row.is_featured ??
+            false
+          ),
+
+        code:
+          row.code ??
+          row.product_code ??
+          "",
+
+        wholesalePrice:
+          Number(
+            row.wholesalePrice ??
+            row.wholesale_price ??
+            0
+          ) || 0
+      };
+    }
+
+    /* =========================================================
+       SUPABASE
+       ========================================================= */
+
+    async function loadProducts() {
+
+      const grid = document.getElementById("productsGrid");
+
+      try {
+
+        if (
+          typeof eloraSupabase === "undefined" ||
+          !eloraSupabase
+        ) {
+          throw new Error("Supabase client not found");
+        }
+
+        const { data, error } =
+          await eloraSupabase
+            .from("products")
+            .select("*");
+
+        if (error) {
+          throw error;
+        }
+
+        products =
+          Array.isArray(data)
+            ? data.map(normalizeProduct)
+            : [];
+
+        if (!products.length) {
+          products = demoProducts;
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "تعذر تحميل المنتجات من Supabase:",
+          error
+        );
+
+        products = demoProducts;
+
+      }
+
+      filteredProducts = [...products];
+
+      renderProducts();
+
+    }
+
+    /* =========================================================
+       PRODUCTS RENDER
+       ========================================================= */
+
+    function renderProducts() {
+
+      const grid =
+        document.getElementById("productsGrid");
+
+      if (!filteredProducts.length) {
+
+        grid.innerHTML = `
+          <div class="loading">
+            لا توجد منتجات مطابقة للبحث.
+          </div>
+        `;
+
+        return;
+      }
+
+      grid.innerHTML =
+        filteredProducts
+          .slice(0, 20)
+          .map((product) => {
+
+            const discount =
+              product.discount ||
+              (
+                product.oldPrice > product.price
+                  ? Math.round(
+                      ((product.oldPrice - product.price) /
+                      product.oldPrice) * 100
+                    )
+                  : 0
+              );
+
+            const primePrice =
+              primeActive
+                ? Math.round(product.price * .90)
+                : product.price;
+
+            return `
+
+              <article class="product-card">
+
+                <div class="product-image">
+
+                  ${
+                    discount > 0
+                    ? `
+                      <span class="discount-badge">
+                        خصم ${discount}%
+                      </span>
+                    `
+                    : ""
+                  }
+
+                  <span class="prime-discount">
+                    Prime -10%
+                  </span>
+
+                  <button
+                    class="favorite-btn"
+                    onclick="toggleFavorite(this)"
+                    aria-label="المفضلة"
+                  >
+                    <i class="fa-regular fa-heart"></i>
+                  </button>
+
+                  <img
+                    src="${escapeHtml(product.image)}"
+                    alt="${escapeHtml(product.name)}"
+                    loading="lazy"
+                    onerror="this.src='https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=700&q=85'"
+                  >
+
+                </div>
+
+                <div class="product-info">
+
+                  <div class="product-category">
+                    ${escapeHtml(product.category)}
+                  </div>
+
+                  <div class="product-name">
+                    ${escapeHtml(product.name)}
+                  </div>
+
+                  <div class="product-prices">
+
+                    <span class="current-price">
+                      ${formatPrice(primePrice)}
+                    </span>
+
+                    ${
+                      product.oldPrice > product.price
+                      ? `
+                        <span class="old-price">
+                          ${formatPrice(product.oldPrice)}
+                        </span>
+                      `
+                      : ""
+                    }
+
+                  </div>
+
+                  <button
+                    class="add-cart"
+                    onclick="addToCart('${String(product.id).replace(/'/g,"\\'")}')"
+                  >
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    أضيفي للسلة
+                  </button>
+
+                </div>
+
+              </article>
+
+            `;
+
+          })
+          .join("");
+
+    }
+
+    /* =========================================================
+       SEARCH
+       ========================================================= */
+
+    function handleSearch(value) {
+
+      const query =
+        String(value || "")
+          .trim()
+          .toLowerCase();
+
+      if (!query) {
+
+        filteredProducts = [...products];
+
+      } else {
+
+        filteredProducts =
+          products.filter(product => {
+
+            return [
+              product.name,
+              product.category,
+              product.code
+            ]
+              .join(" ")
+              .toLowerCase()
+              .includes(query);
+
+          });
+
+      }
+
+      renderProducts();
+
+    }
+
+    /* =========================================================
+       CATEGORY FILTER
+       ========================================================= */
+
+    function filterCategory(category) {
+
+      filteredProducts =
+        products.filter(
+          product =>
+            String(product.category)
+              .trim()
+              .toLowerCase()
+              ===
+            String(category)
+              .trim()
+              .toLowerCase()
+        );
+
+      if (!filteredProducts.length) {
+
+        filteredProducts =
+          products.filter(product =>
+            String(product.category)
+              .toLowerCase()
+              .includes(
+                String(category).toLowerCase()
+              )
+          );
+
+      }
+
+      renderProducts();
+
+      scrollToSection("featured");
+
+    }
+
+    document.querySelectorAll(".category-card")
+      .forEach(card => {
+
+        card.addEventListener("click", () => {
+
+          const category =
+            card.dataset.category;
+
+          if (category) {
+            filterCategory(category);
+          }
+
+        });
+
+      });
+
+    /* =========================================================
+       CART
+       ========================================================= */
+
+    function loadCart() {
+
+      try {
+
+        const saved =
+          localStorage.getItem("elora_cart");
+
+        cart =
+          saved
+            ? JSON.parse(saved)
+            : [];
+
+        if (!Array.isArray(cart)) {
+          cart = [];
+        }
+
+      } catch (_) {
+
+        cart = [];
+
+      }
+
+      updateCartCount();
+
+    }
+
+    function saveCart() {
+
+      localStorage.setItem(
+        "elora_cart",
+        JSON.stringify(cart)
+      );
+
+      updateCartCount();
+
+    }
+
+    function updateCartCount() {
+
+      const count =
+        cart.reduce(
+          (total,item) =>
+            total + Number(item.qty || 0),
+          0
+        );
+
+      document.getElementById(
+        "cartCount"
+      ).textContent = count;
+
+    }
+
+    function addToCart(productId) {
+
+      const product =
+        products.find(
+          p => String(p.id) === String(productId)
+        );
+
+      if (!product) {
+
+        showToast("لم يتم العثور على المنتج");
+
+        return;
+
+      }
+
+      const existing =
+        cart.find(
+          item =>
+            String(item.id)
+            ===
+            String(product.id)
+        );
+
+      if (existing) {
+
+        existing.qty += 1;
+
+      } else {
+
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          qty: 1,
+          code: product.code || ""
+        });
+
+      }
+
+      saveCart();
+
+      showToast("تمت إضافة المنتج إلى السلة");
+
+      openCart();
+
+    }
+
+    function changeQuantity(id, amount) {
+
+      const item =
+        cart.find(
+          x => String(x.id) === String(id)
+        );
+
+      if (!item) return;
+
+      item.qty += amount;
+
+      if (item.qty <= 0) {
+
+        cart =
+          cart.filter(
+            x => String(x.id) !== String(id)
+          );
+
+      }
+
+      saveCart();
+
+      renderCart();
+
+    }
+
+    function removeFromCart(id) {
+
+      cart =
+        cart.filter(
+          x => String(x.id) !== String(id)
+        );
+
+      saveCart();
+
+      renderCart();
+
+    }
+
+    function renderCart() {
+
+      const container =
+        document.getElementById("cartItems");
+
+      const summary =
+        document.getElementById("cartSummary");
+
+      if (!cart.length) {
+
+        container.innerHTML = `
+          <div class="cart-empty">
+            <i
+              class="fa-solid fa-bag-shopping"
+              style="font-size:32px;margin-bottom:12px"
+            ></i>
+
+            <div>السلة فارغة</div>
+
+            <div style="font-size:10px;margin-top:5px">
+              أضيفي المنتجات التي تعجبكِ لتظهر هنا.
+            </div>
+          </div>
+        `;
+
+        summary.style.display = "none";
+
+        return;
+
+      }
+
+      container.innerHTML =
+        cart.map(item => `
+
+          <div class="cart-item">
+
+            <img
+              src="${escapeHtml(item.image)}"
+              alt="${escapeHtml(item.name)}"
+            >
+
+            <div class="cart-item-info">
+
+              <div class="cart-item-name">
+                ${escapeHtml(item.name)}
+              </div>
+
+              <div class="cart-item-price">
+                ${formatPrice(item.price)}
+              </div>
+
+            </div>
+
+            <div class="quantity">
+
+              <button
+                onclick="changeQuantity('${String(item.id).replace(/'/g,"\\'")}',1)"
+              >
+                +
+              </button>
+
+              <span>${item.qty}</span>
+
+              <button
+                onclick="changeQuantity('${String(item.id).replace(/'/g,"\\'")}',-1)"
+              >
+                −
+              </button>
+
+            </div>
+
+            <button
+              class="remove-cart"
+              onclick="removeFromCart('${String(item.id).replace(/'/g,"\\'")}')"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+
+          </div>
+
+        `).join("");
+
+      const qty =
+        cart.reduce(
+          (sum,item) =>
+            sum + item.qty,
+          0
+        );
+
+      const subtotal =
+        cart.reduce(
+          (sum,item) =>
+            sum + item.price * item.qty,
+          0
+        );
+
+      document.getElementById(
+        "summaryQty"
+      ).textContent = qty;
+
+      document.getElementById(
+        "summarySubtotal"
+      ).textContent = formatPrice(subtotal);
+
+      document.getElementById(
+        "summaryTotal"
+      ).textContent = formatPrice(subtotal);
+
+      summary.style.display = "block";
+
+    }
+
+    function openCart() {
+
+      renderCart();
+
+      openModal("cartModal");
+
+    }
+
+    /* =========================================================
+       CHECKOUT
+       ========================================================= */
+
+    function openCheckout() {
+
+      if (!cart.length) {
+
+        showToast("السلة فارغة");
+
+        return;
+
+      }
+
+      closeModal("cartModal");
+
+      openModal("checkoutModal");
+
+    }
+
+    const centersByGovernorate = {
+
+      "القاهرة": [
+        "مدينة نصر",
+        "مصر الجديدة",
+        "المعادي",
+        "حلوان",
+        "شبرا",
+        "وسط البلد",
+        "التجمع",
+        "المقطم"
+      ],
+
+      "الجيزة": [
+        "الجيزة",
+        "الدقي",
+        "العجوزة",
+        "6 أكتوبر",
+        "الشيخ زايد",
+        "الهرم",
+        "فيصل"
+      ],
+
+      "الإسكندرية": [
+        "المنتزه",
+        "سيدي بشر",
+        "سموحة",
+        "محرم بك",
+        "العجمي",
+        "برج العرب",
+        "وسط الإسكندرية"
+      ],
+
+      "القليوبية": [
+        "بنها",
+        "شبرا الخيمة",
+        "قليوب",
+        "طوخ",
+        "الخانكة"
+      ]
+
+    };
+
+    function loadCenters() {
+
+      const governorate =
+        document.getElementById(
+          "governorate"
+        ).value;
+
+      const center =
+        document.getElementById(
+          "center"
+        );
+
+      const centers =
+        centersByGovernorate[governorate]
+        ||
+        [
+          "المركز الرئيسي",
+          "منطقة أخرى"
+        ];
+
+      center.innerHTML =
+        `
+          <option value="">
+            اختاري المركز / المنطقة
+          </option>
+        `
+        +
+        centers
+          .map(
+            item =>
+              `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`
+          )
+          .join("");
+
+    }
+
+    async function submitOrder(event) {
+
+      event.preventDefault();
+
+      if (!cart.length) {
+
+        showToast("السلة فارغة");
+
+        return;
+
+      }
+
+      const order = {
+
+        customer_name:
+          document.getElementById(
+            "customerName"
+          ).value.trim(),
+
+        customer_phone:
+          document.getElementById(
+            "customerPhone"
+          ).value.trim(),
+
+        governorate:
+          document.getElementById(
+            "governorate"
+          ).value,
+
+        center:
+          document.getElementById(
+            "center"
+          ).value,
+
+        address:
+          document.getElementById(
+            "customerAddress"
+          ).value.trim(),
+
+        notes:
+          document.getElementById(
+            "orderNotes"
+          ).value.trim(),
+
+        items: cart.map(item => ({
+          product_id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.qty,
+          code: item.code
+        })),
+
+        subtotal:
+          cart.reduce(
+            (sum,item) =>
+              sum + item.price * item.qty,
+            0
+          ),
+
+        payment_method:
+          "cash_on_delivery",
+
+        prime:
+          primeActive
+
+      };
+
+      /*
+       * هنا يتم تجهيز الطلب.
+       *
+       * في الخطوة القادمة سنربطه بجدول orders
+       * الحقيقي في Supabase بعد تجهيز الـDashboard.
+       */
+
+      console.log(
+        "ELORA ORDER:",
+        order
+      );
+
+      showToast(
+        "تم تجهيز الطلب بنجاح"
+      );
+
+      cart = [];
+
+      saveCart();
+
+      closeModal("checkoutModal");
+
+      document.getElementById(
+        "checkoutForm"
+      ).reset();
+
+    }
+
+    /* =========================================================
+       PRIME
+       ========================================================= */
+
+    function openPrime() {
+
+      openModal("primeModal");
+
+    }
+
+    function activatePrimeDemo() {
+
+      const expiresAt =
+        Date.now() + PRIME_DURATION_MS;
+
+      localStorage.setItem(
+        "elora_prime_expires",
+        String(expiresAt)
+      );
+
+      localStorage.removeItem("elora_prime");
+
+      primeActive = true;
+
+      document.body.classList.add("prime-mode");
+
+      const buttonText =
+        document.getElementById("primeButtonText");
+
+      if (buttonText) {
+        buttonText.textContent = "Prime مفعّل";
+      }
+
+      renderProducts();
+
+      closeModal("primeModal");
+
+      showToast("تم تفعيل Elora Prime لمدة 30 يوم");
+
+    }
+
+    function refreshPrimeState() {
+
+      const active = isPrimeCurrentlyActive();
+
+      if (!active) {
+        localStorage.removeItem("elora_prime_expires");
+      }
+
+      primeActive = active;
+
+      document.body.classList.toggle(
+        "prime-mode",
+        active
+      );
+
+      const buttonText =
+        document.getElementById("primeButtonText");
+
+      if (buttonText) {
+        buttonText.textContent =
+          active ? "Prime مفعّل" : "Elora Prime";
+      }
+
+    }
+
+    /* =========================================================
+       HERO    /* =========================================================
+       HERO
+       ========================================================= */
+
+    function startHero() {
+
+      const slides =
+        document.querySelectorAll(
+          ".hero-slide"
+        );
+
+      const dots =
+        document.querySelectorAll(
+          ".hero-dot"
+        );
+
+      function showHero(index) {
+
+        slides.forEach(
+          slide =>
+            slide.classList.remove(
+              "active"
+            )
+        );
+
+        dots.forEach(
+          dot =>
+            dot.classList.remove(
+              "active"
+            )
+        );
+
+        slides[index].classList.add(
+          "active"
+        );
+
+        dots[index].classList.add(
+          "active"
+        );
+
+        /* The active dot itself becomes the slide action bubble. */
+        const heroActions = [
+          {
+            text: "اكتشفي المجموعة",
+            action: () => scrollToSection("featured")
+          },
+          {
+            text: "تسوقي الساعات",
+            action: () => filterCategory("ساعات حريمي")
+          },
+          {
+            text: "اكتشفي الشنط",
+            action: () => filterCategory("شنط حريمي")
+          }
+        ];
+
+        dots.forEach((dot, dotIndex) => {
+          dot.setAttribute("data-label", heroActions[dotIndex].text);
+          dot.setAttribute("aria-label", heroActions[dotIndex].text);
+          dot.onclick = (event) => {
+            event.stopPropagation();
+            if (dotIndex === index) {
+              heroActions[index].action();
+              return;
+            }
+            showHero(dotIndex);
+            clearInterval(heroTimer);
+            heroTimer = setInterval(nextHero, 2000);
+          };
+        });
+
+        heroIndex = index;
+
+      }
+
+      function nextHero() {
+
+        const next =
+          (heroIndex + 1)
+          % slides.length;
+
+        showHero(next);
+
+      }
+
+      showHero(heroIndex);
+
+      heroTimer =
+        setInterval(
+          nextHero,
+          2000
+        );
+
+      const slider =
+        document.getElementById("heroSlider");
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchMoved = false;
+
+      slider.addEventListener(
+        "touchstart",
+        (event) => {
+
+          if (!event.touches.length) return;
+
+          touchStartX = event.touches[0].clientX;
+          touchStartY = event.touches[0].clientY;
+          touchMoved = false;
+
+          clearInterval(heroTimer);
+
+        },
+        {passive:true}
+      );
+
+      slider.addEventListener(
+        "touchmove",
+        (event) => {
+
+          if (!event.touches.length) return;
+
+          const dx =
+            event.touches[0].clientX - touchStartX;
+
+          const dy =
+            event.touches[0].clientY - touchStartY;
+
+          if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) {
+            touchMoved = true;
+          }
+
+        },
+        {passive:true}
+      );
+
+      slider.addEventListener(
+        "touchend",
+        (event) => {
+
+          const endX =
+            event.changedTouches[0].clientX;
+
+          const dx = endX - touchStartX;
+
+          if (touchMoved && Math.abs(dx) >= 45) {
+
+            if (dx < 0) {
+              nextHero();
+            } else {
+              const previous =
+                (heroIndex - 1 + slides.length)
+                % slides.length;
+
+              showHero(previous);
+            }
+
+          }
+
+          heroTimer =
+            setInterval(
+              nextHero,
+              2000
+            );
+
+        },
+        {passive:true}
+      );
+
+    }
+
+    /* =========================================================
+       INFINITE CATEGORY TRACK
+       ========================================================= */
+
+    (function setupInfiniteCategories() {
+
+      const wrapper =
+        document.getElementById(
+          "categoryWrapper"
+        );
+
+      const track =
+        document.getElementById(
+          "categories"
+        );
+
+      const firstSet =
+        document.getElementById(
+          "categorySet"
+        );
+
+      if (
+        !wrapper ||
+        !track ||
+        !firstSet
+      ) {
+        return;
+      }
+
+      let setWidth = 0;
+      let offset = 0;
+
+      const speed = .55;
+
+      let lastTime = 0;
+
+      let dragging = false;
+      let pointerId = null;
+
+      let startX = 0;
+      let startOffset = 0;
+
+      function measure() {
+
+        setWidth =
+          firstSet.getBoundingClientRect()
+            .width;
+
+        if (!setWidth) {
+          return;
+        }
+
+        offset =
+          normalize(offset);
+
+        apply();
+
+      }
+
+      function normalize(value) {
+
+        if (!setWidth) {
+          return value;
+        }
+
+        while (
+          value <= -setWidth
+        ) {
+          value += setWidth;
+        }
+
+        while (
+          value > 0
+        ) {
+          value -= setWidth;
+        }
+
+        return value;
+
+      }
+
+      function apply() {
+
+        track.style.transform =
+          `translate3d(${offset}px,0,0)`;
+
+      }
+
+      function animate(time) {
+
+        if (!lastTime) {
+          lastTime = time;
+        }
+
+        const delta =
+          Math.min(
+            40,
+            time - lastTime
+          );
+
+        lastTime = time;
+
+        if (
+          !dragging &&
+          setWidth
+        ) {
+
+          offset -=
+            speed *
+            (delta / 16.6667);
+
+          offset =
+            normalize(offset);
+
+          apply();
+
+        }
+
+        requestAnimationFrame(
+          animate
+        );
+
+      }
+
+      wrapper.addEventListener(
+        "pointerdown",
+        event => {
+
+          if (
+            event.pointerType === "mouse" &&
+            event.button !== 0
+          ) {
+            return;
+          }
+
+          dragging = true;
+
+          pointerId =
+            event.pointerId;
+
+          startX =
+            event.clientX;
+
+          startOffset =
+            offset;
+
+          wrapper.classList.add(
+            "dragging"
+          );
+
+          try {
+
+            wrapper.setPointerCapture(
+              event.pointerId
+            );
+
+          } catch (_) {}
+
+        }
+      );
+
+      wrapper.addEventListener(
+        "pointermove",
+        event => {
+
+          if (
+            !dragging ||
+            event.pointerId !== pointerId
+          ) {
+            return;
+          }
+
+          const dx =
+            event.clientX -
+            startX;
+
+          offset =
+            normalize(
+              startOffset + dx
+            );
+
+          apply();
+
+        }
+      );
+
+      function endDrag() {
+
+        if (!dragging) {
+          return;
+        }
+
+        dragging = false;
+
+        pointerId = null;
+
+        startOffset =
+          offset;
+
+        wrapper.classList.remove(
+          "dragging"
+        );
+
+      }
+
+      wrapper.addEventListener(
+        "pointerup",
+        endDrag
+      );
+
+      wrapper.addEventListener(
+        "pointercancel",
+        endDrag
+      );
+
+      wrapper.addEventListener(
+        "lostpointercapture",
+        endDrag
+      );
+
+      wrapper.addEventListener(
+        "dragstart",
+        event =>
+          event.preventDefault()
+      );
+
+      window.addEventListener(
+        "resize",
+        measure
+      );
+
+      setTimeout(
+        measure,
+        100
+      );
+
+      setTimeout(
+        measure,
+        500
+      );
+
+      requestAnimationFrame(
+        animate
+      );
+
+    })();
+
+    /* =========================================================
+       FAVORITES
+       ========================================================= */
+
+    function toggleFavorite(button) {
+
+      button.classList.toggle(
+        "active"
+      );
+
+      const icon =
+        button.querySelector("i");
+
+      if (
+        button.classList.contains(
+          "active"
+        )
+      ) {
+
+        icon.className =
+          "fa-solid fa-heart";
+
+        showToast(
+          "تمت إضافة المنتج للمفضلة"
+        );
+
+      } else {
+
+        icon.className =
+          "fa-regular fa-heart";
+
+      }
+
+    }
+
+    /* =========================================================
+       MENU
+       ========================================================= */
+
+    function toggleMenu() {
+
+      const nav =
+        document.querySelector(".nav");
+
+      nav.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+
+    }
+
+    /* =========================================================
+       ACCOUNT
+       ========================================================= */
+
+    function openAccount() {
+
+      openModal(
+        "accountModal"
+      );
+
+    }
+
+    /* =========================================================
+       MODALS
+       ========================================================= */
+
+    function openModal(id) {
+
+      document
+        .getElementById(id)
+        .classList.add("show");
+
+      document.body.style.overflow =
+        "hidden";
+
+    }
+
+    function closeModal(id) {
+
+      document
+        .getElementById(id)
+        .classList.remove("show");
+
+      document.body.style.overflow =
+        "";
+
+    }
+
+    function closeModalOutside(
+      event,
+      id
+    ) {
+
+      if (
+        event.target.id === id
+      ) {
+
+        closeModal(id);
+
+      }
+
+    }
+
+    /* =========================================================
+       TOAST
+       ========================================================= */
+
+    let toastTimer;
+
+    function showToast(message) {
+
+      const toast =
+        document.getElementById(
+          "toast"
+        );
+
+      toast.textContent =
+        message;
+
+      toast.classList.add(
+        "show"
+      );
+
+      clearTimeout(
+        toastTimer
+      );
+
+      toastTimer =
+        setTimeout(
+          () => {
+
+            toast.classList.remove(
+              "show"
+            );
+
+          },
+          2500
+        );
+
+    }
+
+    /* =========================================================
+       NEWSLETTER
+       ========================================================= */
+
+    function subscribeNewsletter(event) {
+
+      event.preventDefault();
+
+      const email =
+        document.getElementById(
+          "newsletterEmail"
+        ).value.trim();
+
+      if (!email) {
+        return;
+      }
+
+      showToast(
+        "تم تسجيل بريدك الإلكتروني"
+      );
+
+      event.target.reset();
+
+    }
+
+    /* =========================================================
+       SCROLL
+       ========================================================= */
+
+    function scrollToSection(id) {
+
+      const element =
+        document.getElementById(id);
+
+      if (!element) {
+        return;
+      }
+
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        refreshPrimeState();
+
+        loadCart();
+
+        loadProducts();
+
+        startHero();
+
+        setInterval(
+          refreshPrimeState,
+          60 * 1000
+        );
+
+      }
+    );
+
+  </script>
+
+</body>
+    </html>
